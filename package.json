@@ -1,0 +1,69 @@
+{
+    "name": "vsmcnp",
+    "version": "1.0.0",
+    "displayName": "MCNP6.3 syntax highlighting and snippets",
+    "publisher": "repositony",
+    "author": {
+        "name": "Tony Turner"
+    },
+    "description": "Syntax highlighting and autocomplete code snippets for MCNP input files",
+    "icon": "/images/icon.png",
+    "galleryBanner": {
+        "color": "#C80000",
+        "theme": "dark"
+    },
+    "pricing": "Free",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/repositony/vsmcnp"
+    },
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Snippets"
+    ],
+    "keywords": [
+        "mcnp",
+        "monte-carlo",
+        "radiation transport",
+        ".i",
+        ".ip"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "mcnp",
+                "aliases": [
+                    "MCNP",
+                    "mcnp"
+                ],
+                "extensions": [
+                    ".i",
+                    ".ip"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "mcnp",
+                "scopeName": "source.mcnp",
+                "path": "./syntaxes/mcnp.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "mcnp",
+                "path": "./snippets/mcnp.tmSnippets.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "js-yaml": "^4.0"
+    },
+    "bugs": {
+        "url": "https://github.com/repositony/vsmcnp/issues"
+    }
+}

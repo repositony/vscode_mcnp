@@ -1,0 +1,827 @@
+Coordinate transformation:
+  prefix:
+    - TR
+  body:
+    - "tr${1:0}     ${2:0 0 0}   $ displacement vector"
+    - "        ${3:1 0 0}   $ xx' yx' zx'"
+    - "        ${4:0 1 0}   $ xy' yy' zy'"
+    - "        ${5:0 0 1}   $ xz' yz' zz'"
+    - "        ${6:1}       $ defined in main (1) or auxiliary system (-1)"
+  description: Coordinate Transformation
+  scope: mcnp
+
+Embedded geometry:
+  prefix:
+    - EMBED
+  body:
+    - "embed${1:0}"
+    - "        background = ${2:c}               $ Cell number of the background pseudo-cell"
+    - "        matcell    = ${3:m1 c1 m2 c2...}  $ Integer material-cell pairs"
+    - "        mgeoin     = ${4:filename}        $ Input file containing the mesh description"
+    - "        overlap    = ${5:filename}        $ Model to treat overlapping parts [EXIT, ENTRY, AVERAGE]"
+    - "        meshgeo    = ${6:hdf5}            $ Mesh file format: [HDF5, LNK3DNT, ABAQUS, MCNPUM]"
+    - "        hdf5file   = ${7:filename}        $ (opt) Name for HDF5-based output file"
+    - "        filetype   = ${8:ascii}           $ (opt) Output file type [ASCII, BINARY]"
+    - "        calc_vols  = ${9:no}              $ (opt) Toggle volume calculation [YES, NO]"
+    - "        length     = ${10:1}               $ (opt) Conversion factor to cm"
+    - "        debug      = ${11:echomesh}        $ (opt) Write geometry to OUTP [ECHOMESH]"
+    - "        elementchk = ${12:yes}             $ (opt) Toggle UM elemental calcs and reporting [YES, NO]"
+    - "        mgeout     = ${13:filename}        $ (opt, dep) EEOUT results file to write"
+    - "        meein      = ${14:filename}        $ (opt, dep) EEOUT results file to read"
+    - "        gmvfile    = ${15:filename}        $ (opt, dep) Name of the GMV output file"
+    - "        mcnpumfile = ${16:filename}        $ (opt, dep) Name of the MCNPUM output file"
+  description: Embedded geometry
+  scope: mcnp
+
+Embedded elemental edits:
+  prefix:
+    - EMBEE
+  body:
+    - "embee${1:0}:n"
+    - "        embed   = ${2:n}          $ Embedded mesh universe number"
+    - "        factor  = ${3:1.0}        $ (opt) Multiplicative constant"
+    - "        energy  = ${4:1.0}        $ (opt) Conversion factor from MeV/g"
+    - "        time    = ${5:1.0}        $ (opt) Conversion factor from shakes"
+    - "        atom    = ${6:no}         $ (opt) Multiply by atom density [YES, NO]"
+    - "        mat     = ${7:0}          $ (opt) Material number, 0=use cell material"
+    - "        list    = ${8:values}     $ (opt) List of ENDF or special reaction numbers"
+    - "        mtype   = ${9:flux}       $ (opt) Multiplier type"
+    - "        errors  = ${10:yes}        $ (opt, dep) Record rel. err. [YES, NO]"
+    - "        comment = ${11:some text}  $ (opt, dep) Comment in EEOUT file"
+  description: embedded elemental edits
+  scope: mcnp
+
+Multigroup adjoint transport options:
+  prefix:
+    - MGOPT
+  body:
+    - "mgopt   ${1:F}     $ Forward or adjoint problem [F, A]"
+    - "        ${2:n}     $ Total number of energy groups"
+    - "        ${3:0}     $ Weight window usage"
+    - "        ${4:0}     $ Adjoint biasing for adjoint problems"
+    - "        ${5:0}     $ Reference cell for generated weight windows"
+    - "        ${6:0}     $ Normalization value for generated weight windows"
+    - "        ${7:1000}  $ Compression limit for generated weight windows"
+
+  description: multigroup adjoint transport options
+  scope: mcnp
+
+Neutron particle physics:
+  prefix:
+    - PHYS:n
+  body:
+    - "phys:n  ${1:100}   $ Upper limit neutron energy [MeV]"
+    - "        ${2:0}     $ Analog energy limit"
+    - "        ${3:0}     $ Unresolved resonance range prob. table treatment"
+    - "        J J J $ Unused"
+    - "        ${4:0}     $ Light/heavy ion recoil and n-capture algorithm"
+    - "        ${5:-1}    $ Table-based physics cutoff and memory reduction"
+    - "        J J   $ Unused"
+    - "        ${6:1}     $ Secondary photon production"
+    - "        ${7:0}     $ Treatment of nuclear interactions"
+    - "        ${8:0}     $ Treatment of nuclear elastic scattering"
+  description: neutron particle physics
+  scope: mcnp
+
+Photon particle physics:
+  prefix:
+    - PHYS:p
+  body:
+    - "phys:p  ${1:100}   $ Upper limit photon energy [MeV]"
+    - "        ${2:0}     $ Generation of e in MODE p,e, or bremsstrahlung in MODE p"
+    - "        ${3:0}     $ Coherent (Thomson) scattering"
+    - "        ${4:0}     $ Photonuclear particle production"
+    - "        ${5:0}     $ Photon Doppler energy broadening"
+    - "        J     $ Unused"
+    - "        ${6:0}     $ Selection of photo-fission method"
+  description: photon particle physics
+  scope: mcnp
+
+Electron particle physics:
+  prefix:
+    - PHYS:e
+  body:
+    - "phys:e  ${1:100}   $ Upper limit electron energy [MeV]"
+    - "        ${2:0}     $ Generation of photons in MODE e, or bremsstrahlung in MODE p"
+    - "        ${3:0}     $ Production of photons by electrons"
+    - "        ${4:0}     $ Bremsstrahlung angular distribution method"
+    - "        ${5:0}     $ Continuous-energy slowing down (straggling)"
+
+    - "        ${6:1}     $ Production of bremsstrahlung photons along substeps"
+    - "        ${7:1}     $ Electron-induced x-rays produced"
+    - "        ${8:1}     $ Knock-on electrons produced"
+    - "        ${9:1}     $ Photon-induced secondary electrons"
+
+    - "        ${10:0}     $ Bremsstrahlung production on each electron sub step"
+    - "        ${11:0}     $ Choice of Coulomb scattering model"
+    - "        ${12:0}     $ Choice of electron elastic cross section"
+    - "        J     $ Unused"
+    - "        ${13:0.917} $ Stopping power energy spacing"
+    - "        ${14:0.001} $ Control start of single-event transport"
+    - "        ${15:0}     $ Scale Cerenkov photon emission"
+  description: electron particle physics
+  scope: mcnp
+
+Proton particle physics:
+  prefix:
+    - PHYS:h
+  body:
+    - "phys:h  ${1:100}   $ Upper limit proton energy [MeV]"
+    - "        ${2:0}     $ Analog energy limit [MeV]"
+    - "        ${3:-1}    $ Table-based physics cutoff"
+    - "        J     $ Unused"
+    - "        ${4:0}     $ Controls charged-particle straggling"
+    - "        J     $ Unused"
+    - "        ${5:0}     $ Recoil production control for light-ion tabular physics"
+    - "        J J J $ Unused"
+    - "        ${6:0}     $ Controls the choice of Coulomb scattering model"
+    - "        ${7:0}     $ Controls treatment of nuclear interactions"
+    - "        ${8:0}     $ Controls treatment of nuclear elastic scattering"
+    - "        ${9:0.917} $ Controls stopping power energy spacing"
+    - "        J     $ Unused"
+    - "        ${10:0}     $ Scale Cerenkov photon emission"
+    - "        ${11:0}     $ Lower energy delta-ray cutoff [MeV]"
+  description: proton particle physics
+  scope: mcnp
+
+Activation control:
+  prefix:
+    - ACT
+  body:
+    - "act     fission = ${1:n}         $ Type of delayed particle(s) produced from fission"
+    - "        nonfiss = ${2:none}      $ Type of delayed particle(s) produced from non-fission"
+    - "        dn      = ${3:library}   $ Delayed neutron data source"
+    - "        dg      = ${4:none}      $ Delayed gamma data source"
+    - "        thresh  = ${5:10.95}     $ Fraction of retained highest-amp. discrete delayed-gamma lines"
+    - "        dnbias  = ${6:1}         $ Delayed neutrons produced per interaction"
+    - "        nap     = ${7:10}        $ N of act. products with calculated cumul. dist. functions"
+    - "        dneb    = ${8:w1,e1,w2,e2...} $ Delayed neutron energy biasing parameters"
+    - "        dgeb    = ${9:w1,e1,w2,e2...} $ Delayed photon energy biasing parameters"
+    - "        pecut   = ${10:0}         $ Delayed-gamma energy cutof [MeV]"
+    - "        hlcut   = ${11:0}         $ Spontaneous-decay half-life threshold [s]"
+    - "        sample  = ${12:correlate} $ Flag for correlated or uncorrelated [MeV]"
+  description: activation control
+  scope: mcnp
+
+Physics cutoffs:
+  prefix:
+    - CUT
+  body:
+    - "cut:${1:n}   ${2:t}        $ Time cutoff [shakes]"
+    - "        ${3:e}        $ Lower energy cutof [MeV]"
+    - "        ${4:wc1,wc2}  $ Weight cutoffs "
+    - "        ${5:swtm}     $ Minimum source weight"
+  description: physics cutoff cards
+  scope: mcnp
+
+Doppler broadening resonance correction:
+  prefix:
+    - DBRC
+  body:
+    - "dbrc    endf = ${1:nn}        $ Library identifier for scattering data at 0K"
+    - "        emax = ${2:eee}       $ Upper energy limit for applying DBRC [MeV]"
+    - "        isos = ${3:iso_list}  $ List of ZZZAAA identifiers, no suffixes"
+  description: doppler broadening resonance correction
+  scope: mcnp
+
+LCA model options:
+  prefix:
+    - LCA
+  body:
+    - "lca     ${1:2}           $ Controls elastic scattering"
+    - "        ${2:ipreq}       $ Controls pre-equilibrium model"
+    - "        ${3:iexisa}      $ Controls model choice"
+    - "        ${4:ichoic}      $ Control ISABEL intranuclear cascade model"
+    - "        ${5:1}           $ Controls Coulomb barrier for incident charged particles"
+    - "        ${6:1}           $ Subtract nuclear recoil energy to get excitation energy"
+    - "        ${7:0}           $ Controls pion termination treatment"
+    - "        ${8:1}           $ Particle transport options"
+    - "        ${9:1}           $ Choose alternative physics model"
+    - "        ${10:0}           $ Choose light ion and nucleon physics modules"
+    - "        ${11:nevtype}     $ Choose number of evaporation particles modeled by GEM2"
+  description: physics models options
+  scope: mcnp
+
+LCB model options:
+  prefix:
+    - LCB
+  body:
+    - "lcb     ${1:3500}    $ Nucleons, CEM/Bertini/INCL INC used below [MeV]"
+    - "        ${2:3500}    $ Nucleons, LAQGSM03.03 high-energy generator above [MeV]"
+    - "        ${3:2500}    $ Pions, CEM/Bertini/INCL INC used below [MeV]"
+    - "        ${4:2500}    $ Pions, LAQGSM03.03 high-energy generator above [MeV]"
+    - "        ${5:800}     $ ISABEL INC model used below [MeV]"
+    - "        ${6:800}     $ An appropriate model used above [MeV]"
+    - "        ${7:-1.0}    $ Cutoff kinetic energy"
+    - "        ${8:-1.0}    $ Max correction for mass-energy balancing in cascade"
+  description: physics models options
+  scope: mcnp
+
+LCC model options:
+  prefix:
+    - LCC
+  body:
+    - "lcc     ${1:1.0}     $ Rescaling factor of the cascade duration"
+    - "        ${2:45.0}    $ Potential depth [MeV]"
+    - "        ${3:8.0}     $ Maximum impact parameter for Pauli blocking"
+    - "        ${4:0}       $ Controls the Pauli blocking parameter"
+    - "        ${5:-2}      $ Diffuse nuclear surface based on Wood-Saxon density"
+    - "        J J     $ Unused"
+    - "        ${6:0}       $ Use Bertini model below this energy [MeV]"
+    - "        ${7:0}       $ Write no INCL bank particles below this energy"
+    - "        ${8:0}       $ Write no ABLA bank particles below this energy"
+  description: physics models options
+  scope: mcnp
+
+LEA model options:
+  prefix:
+    - LEA
+  body:
+    - "lea     ${1:1}       $ Control generation of de-excitation photons"
+    - "        ${2:4}       $ Level of physics applied for LAHET-PHT photon physics"
+    - "        ${3:1}       $ Mass-energy balancing in the cascade stage"
+    - "        ${4:0}       $ Mass-energy balancing in evaporation stage"
+    - "        ${5:1}       $ Fermi-breakup model nuclide range"
+    - "        ${6:0}       $ Level-density model"
+    - "        ${7:-1}      $ Evaporation and fission models"
+    - "        ${8:1}       $ Allow or suppress fission"
+  description: physics models options
+  scope: mcnp
+
+LEB model options:
+  prefix:
+    - LEB
+  body:
+    - "leb     ${1:1.5}     $ Y0 parameter in level-density formula for Z ≤ 70"
+    - "        ${2:8.0}     $ B0 parameter in level-density formula for Z ≤ 70"
+    - "        ${3:1.5}     $ Y0 parameter in level-density formula for Z > 71"
+    - "        ${4:10.0}    $ B0 parameter in level-density formula for Z > 71"
+  description: physics models options
+  scope: mcnp
+
+Fission multiplicity constants:
+  prefix:
+    - FMULT
+  body:
+    - "fmult   ${1:zaid}            $ Nuclide for which data are entered"
+    - "        sfnu    = ${2:x}     $ x can be single or a list, see manual"
+    - "        width   = ${3:w}     $ Gaussian width FWHM for sampling"
+    - "        sfyield = ${4:y}     $ Spontaneous fission yield (n/s-g)"
+    - "        watt    = ${5:a\ b}  $ Watt energy spectrum parameters"
+    - "        method  = ${6:0}     $ Gaussian sampling algorithm/model physics option"
+    - "        data    = ${7:0}     $ Select data for isotope multiplicities"
+    - "        shift   = ${8:0}     $ Method to modify sampled multiplicity"
+  description: fission multiplicity constants
+  scope: mcnp
+
+Transport options:
+  prefix:
+    - TROPT
+  body:
+    - "tropt   mcscat = ${1:fnal1}     $ Multiple Coulomb scattering"
+    - "        eloss  = ${2:strag1}    $ Slowing down energy losses"
+    - "        nreact = ${3:on}        $ Nuclear reactions"
+    - "        nescat = ${4:on}        $ Nuclear elastic scattering"
+    - "        genxs  = ${5:filename}  $ If absent, standard transport occurs"
+  description: transport options
+  scope: mcnp
+
+Magnetic field transfer map parameters:
+  prefix:
+    - COSYP
+  body:
+    - "cosyp   ${1:prefix}  $ The COSY map file prefix number"
+    - "        ${2:1}       $ Horizontal axis orientation"
+    - "        ${3:2}       $ Vertical axis orientation"
+    - "        ${4:emapk}   $ Operating beam energy of maps"
+  description: Magnetic Field Transfer Map Parameters
+  scope: mcnp
+
+Magnetic field definition:
+  prefix:
+    - BFLD
+  body:
+    - "bfld${1:0}   type    = ${2:t}         $ Polarity [CONST|QUAD|QUADFF]"
+    - "        field   = ${3:f}         $ Field strength or gradient"
+    - "        vec     = ${4:1\ 0\ 0}     $ Direction of field/focusing quadropole"
+    - "        axs     = ${5:0\ 0\ 1}     $ Direction cosines of quadrupole beam axis"
+    - "        refpnt  = ${6:0\ 0\ 0}     $ Point anywhere on quadrupole beam axis"
+    - "        mxdeflc = ${7:10}        $ Maximum deflection angle per step size (mrad)"
+    - "        maxstep = ${8:100}       $ Maximum step size (cm)"
+    - "        ffedges = ${9:s1\ s2...}  $ Surface numbers for fringe-field edge kicks"
+  description: Magnetic field definition
+  scope: mcnp
+
+Gravitational field:
+  prefix:
+    - FIELD
+  body:
+    - "field   gcut = ${1:0.653}     $ Gravitational binding energy (eV) threshold"
+    - "        gpar = ${2:1}         $ Particle type (limited to neutrons)"
+    - "        grad = ${3:3671}      $ Radius of planetary object (km)"
+    - "        gsur = ${4:s1\ s2...}  $ List of one or more surface numbers"
+  description: Gravitational field
+  scope: mcnp
+
+General source definition:
+  prefix:
+    - SDEF
+  body:
+    - "sdef    par = ${1:1}        $ Source particle type(s) by symbol or number"
+    - "        erg = ${2:14.0}     $ Kinetic energy (MeV)"
+    - "        pos = ${3:0\ 0\ 0}    $ Reference point for position sampling"
+    - "        wgt = ${4:1.0}     $ Particle weight"
+  description: General source definition
+  scope: mcnp
+
+Full general source definition:
+  prefix:
+    - SDEF (full)
+  body:
+    - "sdef    par = ${1:1}            $ Source particle type(s) by symbol or number"
+    - "        erg = ${2:14.0}         $ Kinetic energy (MeV)"
+    - "        pos = ${3:0\ 0\ 0}        $ Reference point for position sampling"
+    - "        x   = ${4:0}            $ X coordinate of position"
+    - "        y   = ${5:0}            $ Y coordinate of position"
+    - "        z   = ${6:0}            $ Z coordinate of position"
+    - "        vec = ${7:0\ 0\ 1}        $ Reference vector for DIR in vector notation"
+    - "        rad = ${8:0}            $ Radial distance of the position from POS or AXS"
+    - "        ext = ${9:0}            $ Vol: dist. from POS along AXS. Sur: cosine from AXS"
+    - "        sur = ${10:0}            $ Surface number"
+    - "        nrm = ${11:1}            $ Sign of the surface normal"
+    - "        wgt = ${12:1.0}          $ Particle weight"
+    - "        tme = ${13:0}            $ Time (shakes)"
+    - "        eff = ${14:0.01}         $ Rejection efficiency criterion for position sampling"
+    - "        dir = d            $ Cosine of angle between VEC and direction of flight"
+    - "        ccc = n            $ Cookie-cutter cell number"
+    - "        tr  = n            $ Source particle transformation number"
+    - "        axs = a            $ Reference vector for EXT and RAD in vector notation"
+    - "        cel = c            $ Cell number"
+    - "        ara = area         $ Area of surface"
+    - "        loc = lat lng alt  $ Location of cosmic particle source"
+    - "        dat = m d year     $ Date as month - day - year"
+    - "        bem = exn eyn bml  $ Beam emittance parameters"
+    - "        bap = ba1 ba2 u    $ Beam aperture parameters"
+  description: General source definition
+  scope: mcnp
+
+Surface source write:
+  prefix:
+    - SSW
+  body:
+    - "ssw     ${1:s1\ s2...}          $ Problem surface numbers"
+    - "        ${2:c1\ c2...}          $ Problem cell numbers"
+    - "        sym = ${3:0}           $ Symmetry option flag"
+    - "        pty = ${4:p1\ p2...}    $ Controls particle types to record"
+    - "        cel = ${5:cf1\ cf2...}  $ KCODE fission source neutrons writte for these cells"
+  description: Surface source write
+  scope: mcnp
+
+Surface source read:
+  prefix:
+    - SSR
+  body:
+    - "ssr     old = ${1:c1\ c2...}    $ Use all surfaces in the original calculation if blank"
+    - "        cel = ${2:s1\ s2...}    $ Use all cells in the original calculation if blank"
+    - "        new = ${3:sa1\ sa2...}  $ Assign new surfaces, use OLD list if blank"
+    - "        pty = ${4:p1\ p2...}    $ Particle types for which the tracks are to be read"
+    - "        col = ${5:0}           $ Collision option flag"
+    - "        wgt = ${6:1.0}         $ Multiply particle weights by the constant"
+    - "        tr  = ${7:n}           $ Transformation number/ distribution number"
+    - "        psc = ${8:c}           $ Constant used in PSC evaluation"
+  description: Surface source write
+  scope: mcnp
+
+Criticality Source:
+  prefix:
+    - KCODE
+  body:
+    - "kcode   ${1:1000}   $ Number of source histories per cycle"
+    - "        ${2:1.0}    $ Initial guess for k_eff"
+    - "        ${3:30}     $ Number of cycles to be skipped before beginning tally accumulation"
+    - "        ${4:130}    $ Total number of cycles to be done"
+    - "        ${5:4500}   $ Number of source points for which to allocate storage"
+    - "        ${6:0}      $ Controls normalization of tallies"
+    - "        ${7:6500}   $ Maximum number of cycle values on MCTAL or RUNTPE files"
+    - "        ${8:1}      $ Cycles over which summary and tally information are averaged"
+  description: Criticality Source
+  scope: mcnp
+
+Criticality Options:
+  prefix:
+    - KOPTS
+  body:
+    - "kopts   blocksize  = ${1:10}         $ Number of cycles in every outer iteration"
+    - "        kinetics   = ${2:no}         $ Calculate point-kinetics parameters"
+    - "        precursor  = ${3:no}         $ Calculate detailed precursor information"
+    - "        ksental    = ${4:mctal}      $ Format of sensitivity profiles file, KSENTAL"
+    - "        fmat       = ${5:no}         $ Compute the fission matrix"
+    - "        fmatconvrg = ${6:no}         $ Use fission matrix to determine convergence"
+    - "        fmataccel  = ${7:no}         $ Use fission matrix tfor importance weighting"
+    - "        fmatsrc    = ${8:no}         $ Sample source particles uniformly from fission matrix"
+    - "        fmatskip   = ${9:1}          $ Skips n batches before accumulating fission matrix tallies"
+    - "        fmatncyc   = ${10:10}         $ Batches between fission matrix solves"
+    - "        fmatspace  = ${11:100000000}  $ Initial number of nonzero elements to allocate"
+    - "        fmatnx     = ${12:0}          $ X-axis fission matrix mesh spacing"
+    - "        fmatny     = ${13:0}          $ Y-axis fission matrix mesh spacing"
+    - "        fmatnz     = ${14:0}          $ Z-axis fission matrix mesh spacing"
+  description: Criticality Options
+  scope: mcnp
+
+Shannon Entropy Mesh:
+  prefix:
+    - HSRC
+  body:
+    - "hsrc    ${1:n_x}      $ Number of mesh intervals in x direction"
+    - "        ${2:x_min}    $ Minimum x value for mesh"
+    - "        ${3:x_max}    $ Maximum x value for mesh"
+    - "        ${4:n_y}      $ Number of mesh intervals in y direction"
+    - "        ${5:y_min}    $ Minimum y value for mesh"
+    - "        ${6:y_max}    $ Maximum y value for mesh"
+    - "        ${7:n_z}      $ Number of mesh intervals in z direction"
+    - "        ${8:z_min}    $ Minimum z value for mesh"
+    - "        ${9:z_max}    $ Maximum z value for mesh"
+  description: Shannon Entropy Mesh
+  scope: mcnp
+
+Depletion/Burnup:
+  prefix:
+    - BURN
+  body:
+    - "burn    time   = ${1:t1\ t2...}         $ Incremental time duration for burn steps"
+    - "        pftrac = ${2:f1\ f2...}         $ Fraction total power applied to time steps"
+    - "        power  = ${3:1}                $ Total recoverable fission system power (MW)"
+    - "        mat    = ${4:m1\ m2...}         $ Materials participating in burnup calculation"
+    - "        omit   = ${5:m1\ [n1\ n2...]}    $ For material (m), omit ZAIDs (n) from calculation"
+    - "        afmin  = ${6:1e-10\ 1e-10}      $ Atom fraction controls"
+    - "        bopt   = ${7:b1\ b2\ b3}         $ Burnup options"
+    - "        matvol = ${8:v1\ v2...}         $ Volume of all cells containing corresponding burn material"
+    - "        matmod = ${9:n\ ts1\ [m1\ m2...]} $ Change material concentrations with time"
+    - "        swapb  = ${10:n\ ts1\ [u1\ u2...]} $ Swap universe content at the end of time steps"
+    - "        nostats                   $ Disable computation/output of statistical parameters"
+  description: Depletion/Burnup
+  scope: mcnp
+
+Print Hierarchy:
+  prefix:
+    - FQn
+  body:
+    - "fq${1:4}     F    $ Cell, surface, or detector bins"
+    - "        D    $ Direct or flagged bins"
+    - "        U    $ User bins"
+    - "        S    $ Segment bins"
+    - "        M    $ Multiplier bins"
+    - "        C    $ Cosine bins"
+    - "        E    $ Energy bins"
+    - "        T    $ Time bins"
+  description: Print Hierarchy
+  scope: mcnp
+
+Tally Perturbations:
+  prefix:
+    - PERTn
+  body:
+    - "pert${1:4}:${2:n} cell   = ${3:c1\ c2...}  $ Cells to apply perturbation to"
+    - "        mat    = ${4:m}         $ Fills all cells with specified material"
+    - "        rho    = ${5:r}         $ Sets filled cell material density"
+    - "        method = ${6:1}         $ Number of terms included in perturbation estimate"
+    - "        erg    = ${7:e_l\ e_u}   $ Lower and upper bounds energy range for perturbations"
+    - "        rxn    = ${8:r1\ r2...}  $ ENDF/B reaction number(s) for perturbed xs"
+  description: Tally Perturbations via Differential Operator
+  scope: mcnp
+
+Reactivity Perturbations:
+  prefix:
+    - KPERTn
+  body:
+    - "kpert${1:0}  cell   = ${2:c1\ c2...}   $ Cells to apply perturbation to"
+    - "        mat    = ${3:m1\ m2...}   $ Fill cells with specified material(s)"
+    - "        rho    = ${4:r1\ r2...}   $ Sets filled cell material densities"
+    - "        iso    = ${5:z1\ z2...}   $ ZAIDs that the perturbation impacts"
+    - "        rxn    = ${6:rx1\ rx2...} $ MT or special reaction numbers the perturbation impacts"
+    - "        erg    = ${7:e1\ e2...}   $ Energies (MeV) to apply perturbation over"
+    - "        linear = ${8:yes}        $ Force an unperturbed fission source"
+  description: Reactivity Perturbations via Adjoint Weighting
+  scope: mcnp
+
+Sensitivity Coefficients:
+  prefix:
+    - KSENn
+  body:
+    - "ksen${1:0}   ${2:xs}                   $ Type of sensitivity"
+    - "        iso = ${3:z1\ z2...}       $ ZAIDs for which sensitivities are desired."
+    - "        rxn = ${4:rx1\ rx2...}     $ Reaction MT numbers or special reaction numbers"
+    - "        mt  = ${5:r1\ r2...}       $ Same behavior as RXN"
+    - "        erg = ${6:e1\ e2...}       $ Energy bin boundaries (MeV) to apply sensitivity over"
+    - "        ein = ${7:e1\ e2...}       $ Range of inclident energy bins (MeV)"
+    - "        legendre  = ${8:order}    $ Order of Legendre moments to calculate sensitivities for"
+    - "        cos       = ${9:min\ max}  $ Range of direction-change cosines for scattering events"
+    - "        constrain = ${10:yes}      $ Renormalize the energy (or cosine) sensitivity distribution"
+  description: k_eff Sensitivity Coefficients via Adjoint Weighting
+  scope: mcnp
+
+Track-averaged TMESH Mesh Tally:
+  prefix:
+    - RMESH1
+    - CMESH1
+    - SMESH1
+  body:
+    - "c Track-averaged TMESH Mesh Tally"
+    - "${1:r}mesh${2:1}:${3:n}"
+    - "        ${4:traks}          $ tally the number of tracks through each mesh volume"
+    - "        ${5:flux}           $ Fluence is particle weight * track length / volume"
+    - "        ${6:popul}          $ Score tally population in each volume"
+    - "        ${7:pedep}          $ Score average energy deposition per unit volume"
+    - "        mfact = ${8:n\ c...} $ Response function given on MSHMF followed by constant multiplier"
+    - "        trans = ${9:n}      $ TRn card number used to translate entire mesh"
+    - "c"
+    - "cora${2:3}   ${10:ca1\ ca2...}     $ Mesh bounds in X (rec) or R (cyl/sph)"
+    - "corb${2:3}   ${11:cb1\ cb2...}     $ Mesh bounds in Y (rec), Z (cyl), or Phi (sph)"
+    - "corc${2:3}   ${12:cc1\ cc2...}     $ Mesh bounds in Z (rec) or Theta (cyl/sph)"
+    - "c"
+    - "ergsh${2:3}  ${13:low\ high}       $ Lower/upper energy(+ve) or time(-ve) limits for stroring to tally"
+    - "mshmf${14:0}  ${15:[e1\ f1]...}     $ Pairs of energy and response functions"
+    - "c"
+  description: Track-averaged TMESH Mesh Tally
+  scope: mcnp
+
+Source TMESH Mesh Tally:
+  prefix:
+    - RMESH2
+    - CMESH2
+    - SMESH2
+  body:
+    - "c Source TMESH Mesh Tally"
+    - "${1:r}mesh${2:2}  ${3:p1\ p2...}       $ Particle designators"
+    - "        trans = ${4:n}      $ TRn card number used to translate entire mesh"
+    - "c"
+    - "cora${2:3}   ${5:ca1\ ca2...}     $ Mesh bounds in X (rec) or R (cyl/sph)"
+    - "corb${2:3}   ${6:cb1\ cb2...}     $ Mesh bounds in Y (rec), Z (cyl), or Phi (sph)"
+    - "corc${2:3}   ${7:cc1\ cc2...}     $ Mesh bounds in Z (rec) or Theta (cyl/sph)"
+    - "c"
+    - "ergsh${2:3}  ${8:low\ high}       $ Lower/upper energy(+ve) or time(-ve) limits for stroring to tally"
+    - "mshmf${9:0}  ${10:[e1\ f1]...}     $ Pairs of energy and response functions"
+    - "c"
+  description: Source TMESH Mesh Tally
+  scope: mcnp
+
+Energy Deposition TMESH Mesh Tally:
+  prefix:
+    - RMESH3
+    - CMESH3
+    - SMESH3
+  body:
+    - "c Energy Deposition TMESH Mesh Tally"
+    - "${1:r}mesh${2:3}  ${3:total}          $ Score energy deposited from any source"
+    - "        ${4:de/dx}          $ Score ionization from charged particles"
+    - "        ${5:recol}          $ Score energy transferred to recoil nuclei"
+    - "        ${6:tlest}          $ Score track length folded with tabular heating numbers"
+    - "        ${7:edlct}          $ Score non-tracked particles assumed to deposit energy locally"
+    - "        mfact = ${8:n\ c...} $ Response function given on MSHMF followed by constant multiplier"
+    - "        trans = ${9:n}      $ TRn card number used to translate entire mesh"
+    - "c"
+    - "cora${2:3}   ${10:ca1\ ca2...}     $ Mesh bounds in X (rec) or R (cyl/sph)"
+    - "corb${2:3}   ${11:cb1\ cb2...}     $ Mesh bounds in Y (rec), Z (cyl), or Phi (sph)"
+    - "corc${2:3}   ${12:cc1\ cc2...}     $ Mesh bounds in Z (rec) or Theta (cyl/sph)"
+    - "c"
+    - "ergsh${2:3}  ${13:low\ high}       $ Lower/upper energy(+ve) or time(-ve) limits for stroring to tally"
+    - "mshmf${14:0}  ${15:[e1\ f1]...}     $ Pairs of energy and response functions"
+    - "c"
+  description: Energy Deposition TMESH Mesh Tally
+  scope: mcnp
+
+DXTRAN TMESH Mesh Tally:
+  prefix:
+    - RMESH4
+    - CMESH4
+    - SMESH4
+  body:
+    - "c DXTRAN TMESH Mesh Tally"
+    - "${1:r}mesh${2:4}:${3:n}"
+    - "        trans = ${3:n}      $ TRn card number used to translate entire mesh"
+    - "c"
+    - "cora${2:3}   ${10:ca1\ ca2...}     $ Mesh bounds in X (rec) or R (cyl/sph)"
+    - "corb${2:3}   ${11:cb1\ cb2...}     $ Mesh bounds in Y (rec), Z (cyl), or Phi (sph)"
+    - "corc${2:3}   ${12:cc1\ cc2...}     $ Mesh bounds in Z (rec) or Theta (cyl/sph)"
+    - "c"
+    - "ergsh${2:3}  ${13:low\ high}       $ Lower/upper energy(+ve) or time(-ve) limits for stroring to tally"
+    - "mshmf${14:0}  ${15:[e1\ f1]...}     $ Pairs of energy and response functions"
+    - "c"
+  description: DXTRAN TMESH Mesh Tally
+  scope: mcnp
+
+TMESH Mesh Tally Markers:
+  prefix:
+    - TMESH
+  body:
+    - "tmesh   $ ------ TMESH tallies start ------"
+    - "c"
+    - "${1:c RMESH/CMESH/SMESH tallies here}"
+    - "c"
+    - "endmd   $ ------ TMESH tallies end ------"
+  description: TMESH Mesh Tally Markers
+  scope: mcnp
+
+Rectangular Superimposed Mesh Tally B:
+  prefix:
+    - FMESHn (rec)
+  body:
+    - "fc4    Rectangular mesh tally"
+    - "fmesh4:${1:n}"
+    - "        origin= ${2:0.0\ 0.0\ 0.0}         $ Coordinates (x,y,z) of mesh origin"
+    - "        geom  = ${3:xyz}                 $ Mesh geometry"
+    - "        out   = ${4:xdmf}                $ Output format"
+    - "        imesh = ${5:10}      iints = ${6:5}   $ Coarse mesh points in X"
+    - "        jmesh = ${7:10}      jints = ${8:5}   $ Coarse mesh points in Y"
+    - "        kmesh = ${9:10}      kints = ${10:5}   $ Coarse mesh points in Z"
+    - "        emesh = ${11:1.0e36}              $ Energy bin upper edges (MeV)"
+  description: Superimposed Mesh Tally B
+  scope: mcnp
+
+Cylindrical Superimposed Mesh Tally B:
+  prefix:
+    - FMESHn (cyl)
+  body:
+    - "fc4    Cylindrical mesh tally"
+    - "fmesh4:${1:n}"
+    - "        origin= ${2:0.0\ 0.0\ 0.0}         $ Coordinates (x,y,z) of mesh origin"
+    - "        axs   = ${3:0.0\ 0.0\ 1.0}         $ Direction of the cylinder axis"
+    - "        vec   = ${4:1.0\ 0.0\ 0.0}         $ Vector defining plane for theta=0"
+    - "        geom  = ${5:rzt}                 $ Mesh geometry"
+    - "        out   = ${6:xdmf}                $ Output format"
+    - "        imesh = ${7:10}      iints = ${8:5}   $ Coarse mesh points in R"
+    - "        jmesh = ${9:10}      jints = ${10:5}   $ Coarse mesh points in Z"
+    - "        kmesh = ${11:10}      kints = ${12:5}   $ Coarse mesh points in T"
+    - "        emesh = ${13:1.0e36}              $ Energy bin upper edges (MeV)"
+  description: Superimposed Mesh Tally B
+  scope: mcnp
+
+Full Superimposed Mesh Tally B:
+  prefix:
+    - FMESHn (full)
+  body:
+    - "fc4    Full mesh tally with all keywords"
+    - "fmesh4:${1:n}"
+    - "        origin= ${2:0.0\ 0.0\ 0.0}         $ Coordinates (x,y,z) of mesh origin"
+    - "        axs   = ${3:0.0\ 0.0\ 1.0}         $ Direction of the cylinder axis"
+    - "        vec   = ${4:1.0\ 0.0\ 0.0}         $ Vector defining plane for theta=0"
+    - "        geom  = ${5:rzt}                 $ Mesh geometry"
+    - "        out   = ${6:xdmf}                $ Output format"
+    - "        imesh = ${7:10}      iints = ${8:5}   $ Coarse mesh points in X/R"
+    - "        jmesh = ${9:10}      jints = ${10:5}   $ Coarse mesh points in Y/Z"
+    - "        kmesh = ${11:10}      kints = ${12:5}   $ Coarse mesh points in Z/T"
+    - "        tmesh = ${13:1.0e36}              $ Time bin upper edges (shakes)"
+    - "        tnorm = ${14:1.0}                 $ Time normalisation"
+    - "        emesh = ${15:1.0e36}              $ Energy bin upper edges (MeV)"
+    - "        enorm = ${16:1.0}                 $ Energy normalisation"
+    - "        factor= ${17:1.0}                 $ Multiplicative factor for each mesh"
+    - "        tr    = ${18:n}                   $ Number of the transformation to apply"
+    - "        inc   = ${19:low\ high}            $ Range of collisions that will contribute (MeV)"
+    - "        type  = ${20:flux}                $ Specify the quantity being tallied"
+    - "        kclear= ${21:0}                   $ Generate visualization of cycle quantities"
+    - "        tally = ${22:fast_hist}           $ Tallying algorithm"
+  description: Superimposed Mesh Tally B
+  scope: mcnp
+
+Weight-window Parameters:
+  prefix:
+    - WWP
+  body:
+    - "wwp:${1:n}   ${2:5}   $ Multiplier defining weight window upper limit"
+    - "        ${3:3}   $ Multiplier defining max Russian roulette survival weight"
+    - "        ${4:5}   $ Max number of integer splits"
+    - "        ${5:0}   $ Control where to check a particle's weight"
+    - "        ${6:0}   $ Control where to get lower weight window bounds"
+    - "        ${7:0}   $ Controls treatment of WWE card"
+    - "        ${8:1}   $ Weight-window normalization factor"
+    - "        ${9:0}   $ Energy- and time-splitting control"
+    - "        ${10:0}   $ Limit max lower weight bound for any particle/energy/time"
+    - "        ${11:1}   $ Number of mean-free paths before checking mesh-based weights"
+  description: Weight-window Parameters
+  scope: mcnp
+
+Weight-window Generation:
+  prefix:
+    - WWG
+  body:
+    - "wwg     ${1:n}   $ Problem tally number to optimise for"
+    - "        ${2:t}   $ Invokes cell (>0) or mesh-based (=0) generator"
+    - "        ${3:w}   $ Value of generated lower weight-window bound"
+    - "        4j  $ Unused"
+    - "        ${4:i}   $ Toggle energy (=0) or time (=1) dependent weight windows"
+  description: Weight-window Generation
+  scope: mcnp
+
+Importance Mesh for Mesh-Based Weight-Window Generator:
+  prefix:
+    - MESH
+  body:
+    - "mesh    geom  = ${1:rzt}                 $ Mesh geometry"
+    - "        ref   = ${2:0.0\ 0.0\ 0.0}         $ X, Y, and Z coordinates of the reference point"
+    - "        origin= ${3:0.0\ 0.0\ 0.0}         $ Coordinates (x,y,z) of mesh origin"
+    - "        axs   = ${4:0.0\ 0.0\ 1.0}         $ Direction of the cylinder axis"
+    - "        vec   = ${5:1.0\ 0.0\ 0.0}         $ Vector defining plane for theta=0"
+    - "        imesh = ${6:10}      iints = ${7:5}   $ Coarse mesh points in X/R"
+    - "        jmesh = ${8:10}      jints = ${9:5}   $ Coarse mesh points in Y/Z"
+    - "        kmesh = ${10:10}      kints = ${11:5}   $ Coarse mesh points in Z/T"
+  description: Importance Mesh for Mesh-Based Weight-Window Generator
+  scope: mcnp
+
+DXTRAN Sphere:
+  prefix:
+    - DXT
+  body:
+    - "dxt:${1:n}   ${2:xk\ yk\ zk}  $ Coordinates of center of the kth pair of spheres"
+    - "        ${3:rik}       $ Radius of the kth inner sphere (cm)"
+    - "        ${4:rok}       $ Radius of the kth outer sphere (cm)"
+    - "        ${5:0.0}       $ Upper weight cutoff for DXTRAN weight-cutoff"
+    - "        ${6:0.0}       $ Lower weight cutoff for DXTRAN weight-cutoff"
+    - "        ${7:0.0}       $ Minimum photon weight"
+  description: Importance Mesh for Mesh-Based Weight-Window Generator
+  scope: mcnp
+
+History Cutoff:
+  prefix:
+    - NPS
+  body:
+    - "nps     ${1:npp}          $ The total number of histories to be run in the problem"
+    - "        ${2:npsmg}        $ Direct source contributions to pixels of FIR radiography grid"
+    - "        ${3:n_per_batch}  $ Number of histories used per batch for tallies with batch statistics"
+  description: History Cutoff
+  scope: mcnp
+
+Precision Cutoff:
+  prefix:
+    - STOP
+  body:
+    - "stop    nps  = ${1:npp}    $ Stop calculation after npp particle histories"
+    - "        ctme = ${2:tme}    $ Stop calculation after tme minutes of computer time"
+    - "        F${3:0}   = ${4:e}      $ Stop calculation when rel. err. of tally k is <e"
+  description: Precision Cutoff
+  scope: mcnp
+
+Random Number Generation:
+  prefix:
+    - RAND
+  body:
+    - "rand    gen    = ${1:1}              $ Random number generator type"
+    - "        seed   = ${2:19073486328125} $ Random number generator seed"
+    - "        stride = ${3:152917}         $ Number of random numbers between source particles"
+    - "        hist   = ${4:1}              $ Starting random number which would normally start on nth history"
+  description: Random Number Generation
+  scope: mcnp
+
+Print and Dump Cycle:
+  prefix:
+    - PRDMP
+  body:
+    - "prdmp   ${1:ndp}    $ Increment for printing tallies"
+    - "        ${2:ndm}    $ Increment for dumping to the runtape file"
+    - "        ${3:mct}    $ Controls printing of MCTAL file"
+    - "        ${4:ndmp}   $ Maximum number of dumps on the runtape file"
+    - "        ${5:dmmp}   $ Frequency of tally fluctuation chart calculations"
+  description: Print and Dump Cycle
+  scope: mcnp
+
+Particle Track Output:
+  prefix:
+    - PTRAC
+  body:
+    - "ptrac   buffer   = ${1:100}       $ Storage available for filtered events within each history"
+    - "        file     = ${2:bin}       $ Controls file type"
+    - "        flushnps = ${3:n}         $ Write frequency for HDF5 output file type"
+    - "        max      = ${4:10000}     $ Maximum number of events to write"
+    - "        meph     = ${5:n}         $ Max number of events per history to write"
+    - "        write    = ${6:pos}       $ Particle parameters written"
+    - "        coinc    = ${7:col}       $ Activates file format specifically for coincidence tally scoring"
+    - "        event    = ${8:e}         $ Type of events written"
+    - "        filter   = ${9:f}         $ Additional MCNP6 variables for filtering each event"
+    - "        type     = ${10:p1 p2...}  $ Filters events based on one or more particle types"
+    - "        nps      = ${11:n}         $ Range of particle histories for which events will be output"
+    - "        cell     = ${12:c1 c2...}  $ Cell numbers for filtering histories"
+    - "        surface  = ${13:s1 s2...}  $ Surface numbers for filtering histories"
+    - "        tally    = ${14:t1 t2...}  $ Tally numbers for filtering histories"
+    - "        value    = ${15:0.0}       $ Tally cutoff above which history events will be written"
+  description: Particle Track Output
+  scope: mcnp
+
+Auxiliary Input File and Encryption:
+  prefix:
+    - READ
+  body:
+    - "read    file   = ${1:/path/to/input}   $ Content of this file is inserted after READ card"
+    - "        decode = ${2:password}         $ Allows reading of an encrypted file"
+    - "        encode = ${3:password}         $ Allows the writing of an encrypted file"
+    - "        ${4:noecho}                    $ Suppress printing if READ content in OUTP file"
+    - "        ${5:echo}                      $ Resume echoing READ content to OUTP after NOECHO on previous READ card"
+  description: Auxiliary Input File and Encryption
+  scope: mcnp
+
+Lost Particle Control:
+  prefix:
+    - LOST
+  body:
+    - "lost    ${1:100}   $ Number of lost particles before calculation terminates"
+    - "        ${2:10}    $ Max number of debug prints for lost particles"
+  description: Lost Particle Control
+  scope: mcnp

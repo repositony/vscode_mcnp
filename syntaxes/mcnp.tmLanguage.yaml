@@ -1,0 +1,1523 @@
+$schema: https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
+name: mcnp
+
+patterns:
+  - include: "#comment"
+  - include: "#cell_cards"
+  - include: "#surface_cards"
+  - include: "#data_cards"
+
+repository:
+  #! Top level for comment variations
+  comment:
+    patterns:
+      - include: "#line_comment"
+      - include: "#inline_comment"
+
+  # not u for 'CUT', not numbered for 'Cn', not 'o' for 'COSY/COSYP'
+  # need the qualifiers as commets take precedence
+  line_comment:
+    match: ^\s{0,4}[cC]\s.*$
+    name: comment.line.mcnp
+
+  inline_comment:
+    match: \$.*$
+    name: comment.line.mcnp
+
+  #! Top level for cell cards
+  cell_cards:
+    patterns:
+      - include: "#void_cell"
+      - include: "#material_cell"
+      - include: "#like_cell"
+
+  void_cell:
+    begin: (?i)^\s{0,4}(\d+)\s+(0)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.cellnumber.mcnp
+      "2":
+        name: constant.numeric.cellmaterial.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#cell_keywords"
+
+  material_cell:
+    begin: (?i)^\s{0,4}(\d+)\s+([1-9]\d*)\s+(\S+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.cellnumber.mcnp
+      "2":
+        name: constant.numeric.cellmaterial.mcnp
+      "3":
+        name: constant.numeric.celldensity.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#cell_keywords"
+
+  like_cell:
+    begin: (?i)^\s{0,4}(\d+)\s+(like)\s+\d+\s+(but)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.cellnumber.mcnp
+      "2":
+        name: constant.language.mcnp
+      "3":
+        name: constant.language.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#cell_keywords"
+
+  cell_keywords:
+    match: (?i)(IMP|VOL|PWT|EXT|FCL|WWN|DXC|NONU|PD|TMP|TRCL|LAT|FILL|ELPT|COSY|BFLCL|UNC|U)
+    name: variable.mcnp
+
+  #! Top level for surface cards
+  surface_cards:
+    patterns:
+      - include: "#surface"
+
+  surface:
+    # [j n A list], where n is optional and can be -ve
+    begin: (?i)^\s{0,4}([\+\*]?\d+)\s+(-?\d+\s+)?(?=[[a-z]\/]{1,3})
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.surfacenumber.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#surface_macrobody"
+      - include: "#surface_core"
+
+  surface_core:
+    name: constant.language.surfacetype.mcnp
+    match: (?i)(p[xyz]?|s[qxyzo]?|[ck]\/?[xyz]|gq|t[xyz])[\s\n]
+
+  surface_macrobody:
+    name: constant.language.surfacetype.mcnp
+    match: (?i)(box|rpp|sph|rcc|rhp|hex|rec|trc|ell|wed|arb)[\s\n]
+
+  #! Top level for all data cards, which are split by user manyal chapter
+  data_cards:
+    patterns:
+      - include: "#5.5_geometry"
+      - include: "#5.6_material"
+      - include: "#5.7_physics"
+      - include: "#5.8_source"
+      - include: "#5.9_tally"
+      - include: "#5.10_perturbation"
+      - include: "#5.11_mesh_tally"
+      - include: "#5.12_variance_reduction"
+      - include: "#5.13_control"
+      - include: "#custom"
+
+  #* Chapter level for grouping geometry cards
+  5.5_geometry:
+    patterns:
+      - include: "#geometry_cardname"
+      - include: "#geometry_cardname_starred"
+      - include: "#geometry_cardname_numbered"
+      - include: "#VOL"
+      - include: "#TRn"
+      - include: "#DMn"
+      - include: "#DAWWG"
+      - include: "#EMBED"
+      - include: "#EMBEE"
+
+  # cardname only, no keywords or constants
+  geometry_cardname:
+    name: keyword.mcnp
+    match: (?i)^\s{0,4}(area|u|lat|uran)\s
+
+  geometry_cardname_starred:
+    name: keyword.mcnp
+    match: (?i)^\s{0,4}(\*?fill)\s
+
+  geometry_cardname_numbered:
+    match: (?i)^\s{0,4}(embeb|embem|embtb|embtm|embde|embdf)(\d+)\s
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  VOL:
+    # multiline likely, and 'no' can appear anywhere
+    begin: (?i)^\s{0,4}(vol)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - name: constant.language.mcnp
+        match: (?i)(no)[\s\n]
+
+  TRn:
+    # cardname + id, no keywords or constants
+    match: (?i)^\s{0,4}(\*{0,1}tr)(\d+)\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  DMn:
+    # multiline likely, and material suffix can appear throughout
+    begin: (?i)^\s{0,4}(DM)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#zaid.abx"
+
+  DAWWG:
+    # multiline likely, keywords only
+    begin: (?i)^\s{0,4}(DAWWG)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)(points|xsec|tally|block)(?=[\=\s\n])
+
+  EMBED:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(EMBED)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#embed_variables"
+      - include: "#embed_meshgeo"
+      - include: "#embed_yesno"
+      - include: "#embed_debug"
+      - include: "#embed_type"
+      - include: "#embed_overlap"
+
+  embed_variables:
+    match: (?i)(background|matcell|mgeoin|mgeout|meein|gmvfile|hdf5file|length|mcnpumfile)[\=\s\n]
+    name: variable.mcnp
+
+  embed_meshgeo:
+    match: (?i)(meshgeo)[\s\=]*(lnk3dnt|abaqus|mcnpum|hdf5)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  embed_yesno:
+    match: (?i)(elementchk|calc\_vols)[\s\=]*(yes|no)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  embed_debug:
+    match: (?i)(debug)[\s\=]*(echomesh)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  embed_type:
+    match: (?i)(filetype)[\s\=]*(ascii|binary)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  embed_overlap:
+    match: (?i)(overlap)[\s\=]*(exit|entry|average)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  EMBEE:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(EMBEE)(\d+)(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#embee_variables"
+      - include: "#embee_yesno"
+      - include: "#embee_type"
+
+  embee_variables:
+    match: (?i)(embed|comment|energy|time|factor|list|mat)[\s\n]
+    name: variable.mcnp
+
+  embee_yesno:
+    match: (?i)(errors|atom)[\s\=]*(yes|no)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  embee_type:
+    match: (?i)(mtype)[\s\=]*(flux|isotopic|population|reaction|source|tracks)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  #* Chapter level for grouping geometry cards
+  5.6_material:
+    patterns:
+      - include: "#Mn"
+      - include: "#MTn"
+      - include: "#MXn"
+      - include: "#OTFDB"
+      - include: "#TOTNU"
+      - include: "#material_cardname"
+      - include: "#XSn"
+      - include: "#DRXS"
+
+  Mn:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(m)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#zaid.abx"
+      - include: "#material_variables"
+
+  material_variables:
+    # highlight any library identifiers
+    match: (?i)(gas|[eh]step|[npehastd]lib|pnlib|cond|ref[is])(?=[\=\s\n])
+    name: variable.mcnp
+
+  zaid.abx:
+    # highlight library identifiers following integers
+    match: (?i)(?<=\d+)(\.\d{1,2}[a-z])[\s\n]
+    name: constant.language.zaidlib.mcnp
+
+  any.abx:
+    # highlight any library identifiers
+    match: (?i)(\.\d{1,2}[a-z])[\s\n]
+    name: constant.language.zaidlib.mcnp
+
+  material_cardname:
+    match: (?i)^\s{0,4}(nonu|awtab|void|mgopt)\s
+    name: keyword.mcnp
+
+  MTn:
+    # multiline possible, also has library identifiers
+    begin: (?i)^\s{0,4}(mt)(\d+)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#any.abx"
+
+  MXn:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(mx)(\d+)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#zaid.abx"
+      - match: (?i)model[\s\n]
+        name: variable.mcnp
+
+  OTFDB:
+    # multiline likely, library extensions needed
+    begin: (?i)^\s{0,4}(otfdb)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#zaid.abx"
+
+  TOTNU:
+    match: (?i)^\s{0,4}(totnu)\s+(no)?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  XSn:
+    # multiline likely, library identifiers
+    begin: (?i)^\s{0,4}(xs)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)\d+(\.\d{1,2}[a-z])[\s\n]
+        captures:
+          "1":
+            name: constant.language.mcnp
+
+  DRXS:
+    # multiline likely, library identifiers
+    begin: (?i)^\s{0,4}(drxs)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)\d+(\.\d{1,2}[a-z])[\s\n]
+        captures:
+          "1":
+            name: constant.language.mcnp
+
+  #* Chapter level for physics cards
+  5.7_physics:
+    patterns:
+      - include: "#physics_cardname"
+      - include: "#physics_cardname_p"
+      - include: "#PHYS"
+      - include: "#MPHYS"
+      - include: "#ACT"
+      - include: "#DBRC"
+      - include: "#FMULT"
+      - include: "#TROPT"
+      - include: "#BFLDn"
+      - include: "#FIELD"
+
+  physics_cardname:
+    match: (?i)^\s{0,4}(mode|lca|lcb|lcc|lea|leb|cosyp|cosy|bflcl)\s
+    name: keyword.mcnp
+
+  physics_cardname_p:
+    match: (?i)^\s{0,4}(phys|cut|elpt|tmp|thtme|unc)(?=\:)
+    name: keyword.mcnp
+
+  ACT:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(act)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#act_variables"
+      - include: "#act_delayed_n"
+      - include: "#act_delayed_g"
+      - include: "#act_sample"
+      - include: "#act_fission"
+
+  act_variables:
+    match: (?i)(thresh|dnbias|nap|d[ng]eb|pecut|hlcut)(?=[\=\s\n])
+    name: variable.mcnp
+
+  act_delayed_n:
+    match: (?i)(dn)[\s\=]*(model|library|both|prompt)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  act_delayed_g:
+    match: (?i)(dg)[\s\=]*(lines|mg|none)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  act_sample:
+    match: (?i)(sample)[\s\=]*(correlate|nonfiss_cor)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  act_fission:
+    match: (?i)(nonfiss|fission)[\s\=]*(none|[npefa,\s]+)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  DBRC:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(dbrc)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      # isos is zzzaaa but no suffix so no library syntax needed
+      - match: (?i)(endf|emax|isos)(?=[\=\s\n])
+        name: variable.mcnp
+
+  MPHYS:
+    # single line
+    match: (?i)^\s{0,4}(MPHYS)\s+(on|off)?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  FMULT:
+    # multiline likely, just a set of keywords
+    begin: (?i)^\s{0,4}(fmult)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(sfnu|width|sfyield|watt|method|data|shift)(?=[\=\s\n])
+        name: variable.mcnp
+
+  TROPT:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(tropt)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#tropt_variables"
+      - include: "#tropt_mcscat"
+      - include: "#tropt_eloss"
+      - include: "#tropt_nreact"
+      - include: "#tropt_mescat"
+
+  tropt_variables:
+    match: (?i)(genxs)(?=[\=\s\n])
+    name: variable.mcnp
+
+  tropt_mcscat:
+    match: (?i)(mcscat)[\s\=]*(off|fnal[12]|gaussian)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  tropt_eloss:
+    match: (?i)(eloss)[\s\=]*(off|strag1|csda)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  tropt_nreact:
+    match: (?i)(nreact)[\s\=]*(off|on|atten|remove)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  tropt_mescat:
+    match: (?i)(mescat|nescat)[\s\=]*(off|on)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  BFLDn:
+    # multiline likely, keywords + constants
+    begin: (?i)^\s{0,4}(bfld)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(field|vec|axs|refpnt|mxdeflc|maxstep|ffedges)(?=[\=\s\n])
+        name: variable.mcnp
+      - match: (?i)(type)[\s\=]*(const|quad|quadff)?[\s\n]
+        captures:
+          "1":
+            name: variable.mcnp
+          "2":
+            name: constant.language.mcnp
+
+  FIELD:
+    # multiline possible, keywords only
+    begin: (?i)^\s{0,4}(field)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(gcut|gpar|grad|gsur)(?=[\=\s\n])
+        name: variable.mcnp
+
+  #* Chapter level for physics cards
+  5.8_source:
+    patterns:
+      - include: "#SDEF"
+      - include: "#SIn"
+      - include: "#SPn/SBn"
+      - include: "#DSn"
+      - include: "#SCn"
+      - include: "#SSW"
+      - include: "#SSR"
+      - include: "#KCODE/KSRC/HSRC"
+      - include: "#KOPTS"
+      - include: "#BURN"
+
+  SDEF:
+    # multiline possible, keywords only
+    begin: (?i)^\s{0,4}(sdef)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - name: constant.language.mcnp
+        match: (?i)(?<=[\=\s]+)(fcel|ftr|ferg)(?=[\=\s\n])
+      - name: variable.mcnp
+        match:
+          (?i)\s*(cel|sur|erg|ftme|tme|dir|vec|nrm|pos|rad|ext|axs|[xyz]|ccc|
+          ara|wgt|tr|eff|par|dat|loc|bem|bap)(?=[\=\s\n])
+
+  SIn:
+    match: (?i)^\s{0,4}(si)(\d+)\s+([hals])?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: constant.language.mcnp
+
+  SPn/SBn:
+    match: (?i)^\s{0,4}(s[pb])(\d+)(\s+[dcvw])?(s+\-\d+\s)?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: constant.language.mcnp
+
+  DSn:
+    match: (?i)^\s{0,4}(ds)(\d+)(\s+[hsltq])?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: constant.language.mcnp
+
+  SCn:
+    match: (?i)^\s{0,4}(sc)(\d+)(\s.*$)?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: string.mcnp
+
+  SSW:
+    # multiline probable, keywords only
+    begin: (?i)^\s{0,4}(ssw)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)\s*(sym|pty|cel)(?=[\=\s\n])
+
+  SSR:
+    # multiline probable, keywords only
+    begin: (?i)^\s{0,4}(ssr)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)\s*(old|cel|new|pty|col|wgt|tr|psc|axs|ext|poa|bcw)(?=[\=\s\n])
+
+  KCODE/KSRC/HSRC:
+    # single line
+    match: (?i)^\s{0,4}(kcode|ksrc|hsrc)\s
+    name: keyword.mcnp
+
+  KOPTS:
+    # multiline probable, keywords and constants
+    begin: (?i)^\s{0,4}(kopts)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      # variables without predefined constants
+      - name: variable.mcnp
+        match: (?i)(BLOCKSIZE|FMATSKIP|FMATNCYC|FMATSPACE|FMATN[xyz])(?=[\=\s\n])
+      # variables with yes/no constants
+      - match: (?i)(kinetics|precursor|FMATCONVRG|FMATACCEL|FMATSRC|fmat)[\s\=]*(yes|no)?[\s\n]
+        captures:
+          "1":
+            name: variable.mcnp
+          "2":
+            name: constant.language.mcnp
+      # variables for sensitivity
+      - match: (?i)(ksental)[\s\=]*(mctal)?[\s\n]
+        captures:
+          "1":
+            name: variable.mcnp
+          "2":
+            name: constant.language.mcnp
+
+  BURN:
+    # multiline probable, keywords and constants
+    begin: (?i)^\s{0,4}(burn)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      # variables without predefined constants
+      - name: variable.mcnp
+        match: (?i)(time|pftrac|power|omit|afmin|bopt|swapb|matvol|matmod|mat|PFRAC)(?=[\=\s\n])
+      # flags
+      - name: constant.language.mcnp
+        match: (?i)(nostats)
+
+  #* Chapter level for physics cards
+  5.9_tally:
+    patterns:
+      - include: "#Fn_plus"
+      - include: "#F5_detector"
+      - include: "#F5_array"
+      - include: "#Fn"
+      - include: "#FCn"
+      - include: "#En"
+      - include: "#Tn"
+      - include: "#Cn"
+      - include: "#FQn"
+      - include: "#FMn/FSn/FUn" # just lists but end in 'C' or 'T'
+      - include: "#DEn/DFn"
+      - include: "#EMn/TMn/CFn/SFn/SDn/TFn" # all just lists, no kw, no cst
+      - include: "#FTn"
+      - include: "#NOTRN"
+
+  # todo: could be single line really
+  Fn:
+    # most cell/surface '*Fn' and 'Fn' tallies
+    begin: (?i)^\s{0,4}(\**f)(\d*[1247])(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      # flags
+      - name: constant.language.mcnp
+        match: (?i)\sT[\s\n]
+      # repeated structures
+      - name: variable.mcnp
+        match: (?i)(u)\s*(?=\=)
+
+  Fn_plus:
+    # the f6 and f8 tallies can also be preceeded by a '+'
+    # kept separate from general case to hint at a problem
+    begin: (?i)^\s{0,4}([\+\*]*f)(\d*[68])(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      # flags
+      - name: constant.language.mcnp
+        match: (?i)\sT[\s\n]
+      # repeated structures
+      - name: variable.mcnp
+        match: (?i)(u)\s*(?=\=)
+
+  F5_detector:
+    # point/ring detector tallies have 'ND' to look for but no 'T'
+    # ring also has 'Fna' where a is the axis of the ring
+    begin: (?i)^\s{0,4}(\**f)(\d*5)([xyz]?)(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      # flags
+      - name: constant.language.mcnp
+        match: (?i)\snd[\s\n]
+
+  F5_array:
+    # radiography arrays of point detectors
+    # sinple with nothing multiline to look for
+    match: (?i)^\s{0,4}([\*]*fi[prc])(\d*5)(\:)
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  FCn:
+    match: (?i)^\s{0,4}(fc)(\d*[124-8])(\s.*$)?
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: string.mcnp
+
+  En:
+    # multiline probable, has constants
+    begin: (?i)^\s{0,4}(E)(\d*[0124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      # todo must be at end of the input line
+      - name: constant.language.mcnp
+        match: (?i)\s(nt|C)[\s\n]
+
+  Tn:
+    # multiline probable, has keywords and constants
+    begin: (?i)^\s{0,4}(T)(\d*[124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      # most keyword variables
+      - name: variable.mcnp
+        match: (?i)\s*(cbeg|cfrq|cofi|coni|csub|cend)(?=[\=\s\n])
+      # todo must be at end of the input line
+      - name: constant.language.mcnp
+        match: (?i)\s(nt|C)[\s\n]
+
+  Cn:
+    # can have a '*' modifier to use degrees instead of cosines
+    # multiline probable, has keywords and constants
+    begin: (?i)^\s{0,4}(\**C)(\d*[124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - name: constant.language.mcnp
+        match: (?i)\s(t|C)$
+
+  FQn:
+    # multiline probable, has a million keywords
+    begin: (?i)^\s{0,4}(fq)(\d*[124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)\s*(f|d|u|s|m|c|e|t)[\s\n]+
+        name: constant.language.mcnp
+
+  DEn/DFn:
+    # multiline probable, has keywords
+    begin: (?i)^\s{0,4}(d[ef])(\d*[0124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)(ic|iu|fac)\s*(?=\={0,1})
+      - name: constant.language.mcnp
+        match: (?i)(log|lin)\s
+
+  EMn/TMn/CFn/SFn/SDn/TFn:
+    # single line
+    match: (?i)^\s{0,4}(em|tm|cf|sf|sd|tf)(\d*[0124-8])\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  FMn/FSn/FUn:
+    # multiline probable, has constants only at end
+    begin: (?i)^\s{0,4}(fm|fs|fu)(\d*[124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - name: constant.language.mcnp
+        match: (?i)\s(t|C)$
+
+  FTn:
+    # multiline probable, has a million keywords
+    begin: (?i)^\s{0,4}(ft)(\d*[124-8])\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)(geb|frv|tmc|scx|elc|phl|cap|res|tag|roc|pds|fft|com|spm|mgc|fns|lcs)\s*(?=\={0,1})
+      - name: constant.language.mcnp
+        match: (?i)(inc|icd|scd|ptt|let)[\s\n]
+
+  NOTRN:
+    # single line flag, no arguments
+    match: (?i)^\s{0,4}(notrn)$
+    name: keyword.mcnp
+
+  #* Chapter level for perturbation  cards
+  5.10_perturbation:
+    patterns:
+      - include: "#PERTn"
+      - include: "#KPERTn"
+      - include: "#KSENn"
+
+  PERTn:
+    # multiline probable, some variables
+    begin: (?i)^\s{0,4}(pert)(\d+)(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)(cell|mat|rho|method|erg|rxn)\s*(?=\={0,1})
+
+  KPERTn:
+    # multiline probable, some variables
+    begin: (?i)^\s{0,4}(kpert)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)(cell|mat|rho|iso|rxn|erg)\s*(?=\={0,1})
+      - match: (?i)(linear)[\s\=]*(yes|no)?[\s\n]
+        captures:
+          "1":
+            name: variable.mcnp
+          "2":
+            name: constant.language.mcnp
+
+  KSENn:
+    # multiline probable, some variables
+    begin: (?i)^\s{0,4}(ksen)(\d+)\s+(xs)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+      "3":
+        name: constant.language.mcnp
+    patterns:
+      - include: "#comment"
+      - name: variable.mcnp
+        match: (?i)(iso|rxn|mt|erg|ein|legendre|cos)\s*(?=\={0,1})
+      - match: (?i)(constrain)[\s\=]*(yes|no)?[\s\n]
+        captures:
+          "1":
+            name: variable.mcnp
+          "2":
+            name: constant.language.mcnp
+
+  #* Chapter level for perturbation cards
+  5.11_mesh_tally:
+    patterns:
+      - include: "#FMESHn"
+      - include: "#tmesh_markers"
+      - include: "#tmesh_numbered"
+      - include: "#MSHMFn"
+      - include: "#XMESH1"
+      - include: "#XMESH2"
+      - include: "#XMESH3"
+      - include: "#XMESH4"
+      - include: "#SPDTL"
+
+  FMESHn:
+    begin: (?i)^\s{0,4}(\**fmesh)(\d*4|\d*01)(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#fmesh_variables"
+      - include: "#fmesh_yesno"
+      - include: "#fmesh_geometry"
+      - include: "#fmesh_output"
+      - include: "#fmesh_type"
+      - include: "#fmesh_tally"
+
+  fmesh_variables:
+    match: (?i)(origin|axs|vec|[ijket]mesh|[ijket]ints|factor|tr|inc|kclear)\s*(?=\={0,1})
+    name: variable.mcnp
+
+  fmesh_yesno:
+    match: (?i)([et]norm|voidoff|vtkout|prntcell)[\s\=]*(yes|no)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  fmesh_geometry:
+    match: (?i)(geom)[\s\=]*(xyz|rzt|cyl|rec)[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  fmesh_output:
+    match: (?i)(out)[\s\=]*(colsci|col|cfsci|cf|ij|ik|jk|none|xdmf)[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  fmesh_type:
+    match: (?i)(type)[\s\=]*(flux|source)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  fmesh_cuv:
+    match: (?i)(smpl_ty)[\s\=]*(syst|rand|regular)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  fmesh_tally:
+    match: (?i)(tally)[\s\=]*(fast_hist|hist|rma_batch|batch)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  tmesh_markers:
+    match: (?i)^\s{0,4}(TMESH|ENDMD)\s
+    name: keyword.mcnp
+
+  tmesh_numbered:
+    match: (?i)^\s{0,4}(cor[abc]|ergsh)(\d*[1-4])\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  MSHMFn:
+    match: (?i)^\s{0,4}(mshmf)(\d+)\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  XMESH1:
+    # only applies to tally type 1
+    begin: (?i)^\s{0,4}([rcs]mesh)(\d*1)(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(mfact|trans)\s*(?=\={0,1})
+        name: variable.mcnp
+      - match: (?i)(traks|flux|popul|pedep)[\s\n]
+        name: constant.language.mcnp
+
+  XMESH2:
+    # only applies to tally type 2
+    begin: (?i)^\s{0,4}([rcs]mesh)(\d*2)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(trans)\s*(?=\={0,1})
+        name: variable.mcnp
+
+  XMESH3:
+    # only applies to tally type 3
+    begin: (?i)^\s{0,4}([rcs]mesh)(\d*3)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(mfact|trans)\s*(?=\={0,1})
+        name: variable.mcnp
+      - match: (?i)(total|de\/dx|recol|tlest|edlct)[\s\n]
+        name: constant.language.mcnp
+
+  XMESH4:
+    # only applies to tally type 4
+    begin: (?i)^\s{0,4}([rcs]mesh)(\d*4)(\:)
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(trans)\s*(?=\={0,1})
+        name: variable.mcnp
+
+  SPDTL:
+    match: (?i)(SPDTL)\s+(force|off)?\s?
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  #* Chapter level for perturbation  cards
+  5.12_variance_reduction:
+    patterns:
+      - include: "#vr_cardname"
+      - include: "#vr_cardname_p"
+      - include: "#vr_cardname_n"
+      - include: "#vr_cardname_n_p"
+      - include: "#VAR"
+      - include: "#DDn"
+      - include: "#PDn"
+      - include: "#MESH"
+
+  vr_cardname:
+    match: (?i)^\s{0,4}(wwg|pwt)\s
+    name: keyword.mcnp
+
+  vr_cardname_p:
+    match: (?i)^\s{0,4}(imp|ww[etp]|wwg[et]|[et]splt|ext|vect|fcl|dxt|spabi)(?=\:)
+    name: keyword.mcnp
+
+  vr_cardname_n:
+    match: (?i)^\s{0,4}(dxc|bbrem)(\d+)\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  vr_cardname_n_p:
+    match: (?i)^\s{0,4}(WWN\d+)(?=\:)
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  VAR:
+    match: (?i)^\s{0,4}(var)\s+(on|off)?\s
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  DDn:
+    match: (?i)^\s{0,4}(dd)(\d*)\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  PDn:
+    match: (?i)^\s{0,4}(pd)(\d*[124-8])\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  MESH:
+    begin: (?i)^\s{0,4}(mesh)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#mesh_geometry"
+      - include: "#mesh_variables"
+
+  mesh_variables:
+    match: (?i)(ref|origin|axs|vec|[ijk]mesh|[ijk]ints)\s*(?=\={0,1})
+    name: variable.mcnp
+
+  mesh_geometry:
+    match: (?i)(geom)[\s\=]*(xyz|rzt|cyl|rec|rpt|sph)[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  PIKMT:
+    begin: (?i)^\s{0,4}(pikmt)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#zaid.abx"
+
+  #* Chapter level for perturbation  cards
+  5.13_control:
+    patterns:
+      - include: "#ctrl_cardname"
+      - include: "#STOP"
+      - include: "#RAND"
+      - include: "#PTRAC"
+      - include: "#PIO"
+      - include: "#READ"
+
+  ctrl_cardname:
+    match: (?i)^\s{0,4}(nps|ctme|print|talnp|prdmp|mcplot|histp|dbcn|lost|idum|rdum|files)\s
+    name: keyword.mcnp
+
+  STOP:
+    # multiline probable, some variables
+    begin: (?i)^\s{0,4}(stop)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(nps|ctme)\s*(?=\={0,1})
+        name: variable.mcnp
+      - match: (?i)(f)(\d+)\s*(?=\={0,1})
+        captures:
+          "1":
+            name: keyword.mcnp
+          "2":
+            name: constant.numeric.mcnp
+
+  RAND:
+    # multiline probable, some variables
+    begin: (?i)^\s{0,4}(rand)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(gen|seed|stride|hist)\s*(?=\={0,1})
+        name: variable.mcnp
+
+  PTRAC:
+    # multiline probable, some variables
+    begin: (?i)^\s{0,4}(ptrac)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#ptrac_core"
+      - include: "#ptrac_file"
+      - include: "#ptrac_write"
+      - include: "#ptrac_coinc"
+      - include: "#ptrac_event"
+
+  ptrac_core:
+    match: (?i)(buffer|flushnps|max|meph|filter|type|nps|cell|surface|tally|value)\s*(?=\={0,1})
+    name: variable.mcnp
+
+  ptrac_file:
+    match: (?i)(file)[\s\=]*(hdf5|asc|bin|aov|bov)[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  ptrac_write:
+    match: (?i)(write)[\s\=]*(pos|all)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  ptrac_coinc:
+    match: (?i)(coinc)[\s\=]*(col|lin)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  ptrac_event:
+    match: (?i)(event)[\s\=]*(src|bnk|sur|col|ter|cap)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  PIO:
+    match: (?i)(PIO)\s+(on|no)?[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  READ:
+    begin: (?i)^\s{0,4}(read)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#read_variables"
+      - include: "#read_flags"
+
+  read_variables:
+    match: (?i)(file|decode|encode)(?=[\s\=\n])
+    name: variable.mcnp
+
+  read_flags:
+    match: (?i)(noecho|echo)\s
+    name: constant.language.mcnp
+
+  DISABLE:
+    match: (?i)(disable)\s+(NUCLIDE\_ACTIVITY\_TABLE)?
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.mcnp
+
+  #* Miscellaneous for custom cards from MCNP mods
+  custom:
+    patterns:
+      - include: "#SDDR"
+      - include: "#DECMn"
+      - include: "#NACT"
+      - include: "#DECTRn"
+      - include: "#NCMn"
+      - include: "#NAMn"
+
+  # for Novel 1-Step routines
+  SDDR:
+    begin: (?i)^\s{0,4}(sddr)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - include: "#srctme"
+      - include: "#contrib"
+
+  contrib:
+    match: (?i)(contrib)[\s\=]*(zaid|cell|voxel)?[\s\n]
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.language.mcnp
+  srctme:
+    name: variable.mcnp
+    match: (?i)(srctme)(?=[\=\s\n])
+
+  # for Novel 1-Step routines
+  DECMn:
+    begin: (?i)^\s{0,4}(decm)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(cells|mat|rho)\s*(?=\={0,1})
+        name: variable.mcnp
+
+  # for Novel 1-Step routines
+  NACT:
+    begin: (?i)^\s{0,4}(nact)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(cells|mat)\s*(?=\={0,1})
+        name: variable.mcnp
+
+  # for Novel 1-Step routines
+  DECTRn:
+    match: (?i)^\s{0,4}(dectr)(\d+)\s
+    captures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+
+  # for Novel 1-Step routines
+  NCMn:
+    begin: (?i)^\s{0,4}(ncm)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(tally|iso\_filter|[xyze]bounds)\s*(?=\={0,1})
+        name: variable.mcnp
+
+  # for Novel 1-Step routines
+  NAMn:
+    begin: (?i)^\s{0,4}(nam)(\d+)\s
+    end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
+    beginCaptures:
+      "1":
+        name: keyword.mcnp
+      "2":
+        name: constant.numeric.mcnp
+    patterns:
+      - include: "#comment"
+      - match: (?i)(norm|iso\_filter|[xyze]bounds)\s*(?=\={0,1})
+        name: variable.mcnp
+      - match: (?i)(output)[\s\=]*(cdgs|spec|gpower|gpers|actual\_gpers)?\s
+        captures:
+          "1":
+            name: variable.mcnp
+          "2":
+            name: constant.language.mcnp
+
+#! name for this grammar scope
+scopeName: source.mcnp

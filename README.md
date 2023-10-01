@@ -1,0 +1,130 @@
+# MCNP6 syntax highlighting and snippets
+
+**An extension providing syntax highlighting and code snippets for MCNP input decks**
+
+Cards, keywords, and constants were taken from the [MCNPv6.3.0 user manual](https://mcnp.lanl.gov/manual.html) but is compatible with most version 6.x input files. By default this applies to files with the `.i` or `.ip` file extension.
+  
+## Syntax highlighting
+
+All the expected syntax rules are implemented for cards, keywords, constants, and comments. Syntax highlighting rules are all case insesnitive, and apply across multiple lines where appropriate, such as with the `SDEF` and `FMESH` cards seen in the example below.
+
+![example_input_deck](/images/example_input_deck.png)
+
+Highlighting rules are contextualised and will generally not apply to incorrect syntax or invalid states. In the following example:
+
+- There are only eight valid tally types, so `FC9` is invalid and will not be highlighted
+- The `XYZ` geometry constant only valid for `GEOM=`, and fails to highlight on `OUT=`
+  
+![fmesh_examples](/images/example_fmesh.png)
+
+Note that while this is a useful indication of problems, it guarantees nothing for runtime.
+
+*There are plans to implement a fully featured language server with detailed error reporting, linting, etc... but this is not a trivial task and will take time.*
+
+## Autocomplete code snippets
+
+Lines may be commented out with the usual `ctrl+/` shortcut, appending a `c` to the start of the selected line(s). The typical bracket matching and quotation autocomplete also included.
+
+Code snippets have been defined for a selection of appropriate input cards. Simply start typing and hit `enter` to generate the card with default values. Tab-stops are defined for all snippets, so pressing `tab` will then cycle through keywords on the card for editing.
+
+For example, selecting `ACT` from the suggestions,
+
+![act_card_prompt](/images/act_card_prompt.png)
+
+will generate the following for you
+
+![act_card_example](/images/act_card_example.png)
+
+Defaults are used where known, but only a hint is provided where the default is ambiguous. e.g. `DNEB` and `ENEB` in the `ACT` example.
+
+### A note on snippets
+
+**For productivity, keywords and values are set to default or a simple hint where ambiguous.**
+
+A comprehensive guide for most cards would take up the entire screen. As a compromise, every line simply has a small comment for context. This is still very useful for cards such as `PHYS`, which have sets of values that change with particle type and no keywords for guidance.
+
+![Alt text](/images/physn_completed.png)
+
+The template above is far easier than trying to remember whatever `"phys:n 100 0 0 j j j 0 -1 j j 1 0 0"` means.
+
+Of course, card snippets are fairly subjective in their usefulness. Any feedback on what defaults, flags, or comments should be used for certain cards would be appreciated.
+
+## Customising syntax colours
+
+The textmate [naming conventions](https://macromates.com/manual/en/language_grammars) are used for tokenisation to support most themes. MCNP specific syntax highlighting colours are customisable by overwriting the theme in your `settings.json`.
+
+For example, to change the highlight colours for cell material density and comments:
+
+```json
+"editor.tokenColorCustomizations": {
+    "textMateRules": [
+        {
+            "scope": "constant.numeric.celldensity.mcnp",
+            "settings": {
+                "foreground": "#535353"
+            }
+        },
+        {
+            "scope": "comment.line.mcnp",
+            "settings": {
+                "foreground": "#FF0000"
+            }
+        }
+    ]
+}
+```
+
+All values for the `"scope"` are described in the table below.
+
+### Scope descriptions
+
+Themes set their own colours for tokens and colour based on a hierarchy. For example, below are the typical naming conventions for line comments.
+
+```text
+comment => comments
+ |___ line => line comments
+      |____ double-slash => // style line comment
+      |____ double-dash  => -- style line comment
+      |____ number-sign  => #  style line comment
+      |____ percentage   => %  style line comment
+```
+
+So setting a colour for `comment.line.number-sign` overwites just the `#` style comment colour. Similarly setting `comment.line` overwrites any line comment regardless of style
+
+The MCNP syntax scopes to change are tabulated below.
+
+| Syntax description  | Example | Scope |
+| :----------------   | :--------- | :------ |
+| Comments            | **c example comment line** | comment.line.mcnp   |
+| Cell number         | **99** 5 -0.26 surface numbers...| keyword.cellnumber.mcnp   |
+| Cell material number | 99 **5** -0.26 surface numbers... | constant.numeric.cellmaterial.mcnp |
+| Cell material density | 99 5 **-0.26** surface numbers... | constant.numeric.celldensity.mcnp  |
+| Surface number      | **20** PX values... | keyword.surfacenumber.mcnp   |
+| Surface type        | 20 **PX** values... | constant.language.surfacetype.mcnp   |
+| ZAID suffix         | M1 08016.**32c** 1.0 | constant.language.zaidlib.mcnp   |
+| Data card name      | **fmesh**34:n geom=rzt | keyword.mcnp      |
+| Numeric identifiers | fmesh**34**:n geom=rzt | constant.numeric.mcnp     |
+| General variable    | fmesh34:n **geom**=rzt  | variable.mcnp     |
+| General constants   | fmesh34:n geom=**rzt** | constant.language.mcnp        |
+| Strings             | fc34 **example tally comment** | string.mcnp       |
+
+## Issues and bugs
+
+It is guaranteed that there are missing cards or rules that are not working as intended, so if you find anything please [raise an issue](https://github.com/repositony/vsmcnp/issues).
+
+Suggestions for improvements and features are also welcomed!
+
+## For developers
+
+The JSON files quickly spiral out of control with all the nuances of the various input cards and their edge cases.
+
+The YAML file format is much easier to deal with, so it is suggested that you just install `js-yaml` and convert updates from the YAML versions.
+
+```shell
+    # Install js-yaml
+    $ npm install js-yaml
+
+    # Use the command-line tool to convert the yaml files to json
+    $ npx js-yaml syntaxes/mcnp.tmLanguage.yaml > syntaxes/mcnp.tmLanguage.json
+    $ npx js-yaml snippets/mcnp.tmSnippets.yaml > snippets/mcnp.tmSnippets.json
+```
