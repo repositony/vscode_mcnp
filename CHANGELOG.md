@@ -1,8 +1,8 @@
 # Change Log
 
-All notable changes to this extension will be documented in this file.
+All notable changes to the extension will be documented in this file.
 
-For full commit histories and versions please see the [repository]()
+For full commit history and versions please see the [repository](https://github.com/repositony/vscode_mcnp).
 
 ## Version 1.0.0
 

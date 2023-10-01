@@ -110,7 +110,7 @@ The MCNP syntax scopes to change are tabulated below.
 
 ## Issues and bugs
 
-It is guaranteed that there are missing cards or rules that are not working as intended, so if you find anything please [raise an issue](https://github.com/repositony/vsmcnp/issues).
+It is guaranteed that there are missing cards or rules that are not working as intended, so if you find anything please [raise an issue](https://github.com/repositony/vscode_mcnp/issues).
 
 Suggestions for improvements and features are also welcomed!
 

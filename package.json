@@ -1,5 +1,5 @@
 {
-    "name": "vsmcnp",
+    "name": "vscode_mcnp",
     "version": "1.0.0",
     "displayName": "MCNP6.3 syntax highlighting and snippets",
     "publisher": "repositony",
@@ -15,7 +15,7 @@
     "pricing": "Free",
     "repository": {
         "type": "git",
-        "url": "https://github.com/repositony/vsmcnp"
+        "url": "https://github.com/repositony/vscode_mcnp"
     },
     "engines": {
         "vscode": "^1.0.0"
@@ -64,6 +64,6 @@
         "js-yaml": "^4.0"
     },
     "bugs": {
-        "url": "https://github.com/repositony/vsmcnp/issues"
+        "url": "https://github.com/repositony/vscode_mcnp/issues"
     }
 }
