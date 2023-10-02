@@ -9,7 +9,7 @@
     "description": "Syntax highlighting and autocomplete code snippets for MCNP input files",
     "icon": "/images/icon.png",
     "galleryBanner": {
-        "color": "#C80000",
+        "color": "#F6F8FA",
         "theme": "dark"
     },
     "pricing": "Free",
@@ -26,9 +26,10 @@
     ],
     "keywords": [
         "mcnp",
+        "syntax",
+        "snippets",
         "monte-carlo",
-        "radiation transport",
-        ".i",
+        "radiation-transport",
         ".ip"
     ],
     "contributes": {
