@@ -62,7 +62,7 @@
         ]
     },
     "devDependencies": {
-        "js-yaml": "^4.0"
+        "js-yaml": "^4.1.0"
     },
     "bugs": {
         "url": "https://github.com/repositony/vscode_mcnp/issues"
