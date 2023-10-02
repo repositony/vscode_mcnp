@@ -1443,9 +1443,10 @@ repository:
     match: (?i)(contrib)[\s\=]*(zaid|cell|voxel)?[\s\n]
     captures:
       "1":
-        name: keyword.mcnp
+        name: variable.mcnp
       "2":
         name: constant.language.mcnp
+        
   srctme:
     name: variable.mcnp
     match: (?i)(srctme)(?=[\=\s\n])

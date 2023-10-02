@@ -52,7 +52,7 @@
       "end": "^\\n|(?i)(?=^\\s{0,4}(?![cC]\\s)[\\*\\+]*\\w+)",
       "beginCaptures": {
         "1": {
-          "name": "keyword.cell.mcnp"
+          "name": "keyword.cellnumber.mcnp"
         },
         "2": {
           "name": "constant.numeric.cellmaterial.mcnp"
@@ -72,7 +72,7 @@
       "end": "^\\n|(?i)(?=^\\s{0,4}(?![cC]\\s)[\\*\\+]*\\w+)",
       "beginCaptures": {
         "1": {
-          "name": "keyword.cell.mcnp"
+          "name": "keyword.cellnumber.mcnp"
         },
         "2": {
           "name": "constant.numeric.cellmaterial.mcnp"
@@ -95,7 +95,7 @@
       "end": "^\\n|(?i)(?=^\\s{0,4}(?![cC]\\s)[\\*\\+]*\\w+)",
       "beginCaptures": {
         "1": {
-          "name": "keyword.mcnp"
+          "name": "keyword.cellnumber.mcnp"
         },
         "2": {
           "name": "constant.language.mcnp"
@@ -129,7 +129,7 @@
       "end": "^\\n|(?i)(?=^\\s{0,4}(?![cC]\\s)[\\*\\+]*\\w+)",
       "beginCaptures": {
         "1": {
-          "name": "keyword.surface.mcnp"
+          "name": "keyword.surfacenumber.mcnp"
         },
         "2": {
           "name": "constant.numeric.mcnp"
@@ -2222,7 +2222,7 @@
       "match": "(?i)(contrib)[\\s\\=]*(zaid|cell|voxel)?[\\s\\n]",
       "captures": {
         "1": {
-          "name": "keyword.mcnp"
+          "name": "variable.mcnp"
         },
         "2": {
           "name": "constant.language.mcnp"
