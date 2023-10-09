@@ -500,12 +500,26 @@
         },
         {
           "include": "#material_variables"
+        },
+        {
+          "include": "#material_default_libraries"
         }
       ]
     },
     "material_variables": {
-      "match": "(?i)(gas|[eh]step|[npehastd]lib|pnlib|cond|ref[is])(?=[\\=\\s\\n])",
+      "match": "(?i)(gas|[eh]step|cond|ref[is])(?=[\\=\\s\\n])",
       "name": "variable.mcnp"
+    },
+    "material_default_libraries": {
+      "match": "(?i)([npehastd]lib|pnlib)[\\=\\s]+(\\d\\d[a-z])[\\s\\n]",
+      "captures": {
+        "1": {
+          "name": "variable.mcnp"
+        },
+        "2": {
+          "name": "constant.language.zaidlib.mcnp"
+        }
+      }
     },
     "zaid.abx": {
       "match": "(?i)(?<=\\d+)(\\.\\d{1,2}[a-z])[\\s\\n]",

@@ -314,11 +314,21 @@ repository:
       - include: "#comment"
       - include: "#zaid.abx"
       - include: "#material_variables"
+      - include: "#material_default_libraries"
 
   material_variables:
     # highlight any library identifiers
-    match: (?i)(gas|[eh]step|[npehastd]lib|pnlib|cond|ref[is])(?=[\=\s\n])
+    match: (?i)(gas|[eh]step|cond|ref[is])(?=[\=\s\n])
     name: variable.mcnp
+
+  material_default_libraries:
+    # highlight any library identifiers
+    match: (?i)([npehastd]lib|pnlib)[\=\s]+(\d\d[a-z])[\s\n]
+    captures:
+      "1":
+        name: variable.mcnp
+      "2":
+        name: constant.language.zaidlib.mcnp
 
   zaid.abx:
     # highlight library identifiers following integers
@@ -1446,7 +1456,7 @@ repository:
         name: variable.mcnp
       "2":
         name: constant.language.mcnp
-        
+
   srctme:
     name: variable.mcnp
     match: (?i)(srctme)(?=[\=\s\n])
