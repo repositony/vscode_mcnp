@@ -185,7 +185,7 @@
           "include": "#5.13_control"
         },
         {
-          "include": "#custom"
+          "include": "#miscellaneous"
         }
       ]
     },
@@ -2190,8 +2190,11 @@
         }
       }
     },
-    "custom": {
+    "miscellaneous": {
       "patterns": [
+        {
+          "include": "#vertical_input"
+        },
         {
           "include": "#SDDR"
         },
@@ -2211,6 +2214,10 @@
           "include": "#NAMn"
         }
       ]
+    },
+    "vertical_input": {
+      "match": "(?i)^\\s{0,4}(#)\\s",
+      "name": "keyword.mcnp"
     },
     "SDDR": {
       "begin": "(?i)^\\s{0,4}(sddr)\\s",

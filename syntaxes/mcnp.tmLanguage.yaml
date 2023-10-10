@@ -114,7 +114,7 @@ repository:
       - include: "#5.11_mesh_tally"
       - include: "#5.12_variance_reduction"
       - include: "#5.13_control"
-      - include: "#custom"
+      - include: "#miscellaneous"
 
   #* Chapter level for grouping geometry cards
   5.5_geometry:
@@ -1428,14 +1428,19 @@ repository:
         name: constant.language.mcnp
 
   #* Miscellaneous for custom cards from MCNP mods
-  custom:
+  miscellaneous:
     patterns:
+      - include: "#vertical_input"
       - include: "#SDDR"
       - include: "#DECMn"
       - include: "#NACT"
       - include: "#DECTRn"
       - include: "#NCMn"
       - include: "#NAMn"
+
+  vertical_input:
+    match: (?i)^\s{0,4}(#)\s
+    name: keyword.mcnp
 
   # for Novel 1-Step routines
   SDDR:
