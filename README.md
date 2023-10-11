@@ -6,7 +6,7 @@ Cards, keywords, and constants were taken from the [MCNPv6.3.0 user manual](http
   
 ## Syntax highlighting
 
-All the expected syntax rules are implemented for cards, keywords, constants, and comments. Syntax highlighting rules are all case insesnitive, and apply across multiple lines where appropriate, such as with the `SDEF` and `FMESH` cards seen in the example below.
+All the expected syntax rules are implemented for cards, keywords, constants, and comments. Syntax highlighting rules are case insesnitive, and apply across multiple lines where appropriate, such as with the `SDEF` and `FMESH` cards seen in the example below.
 
 ![example_input_deck](/images/example_input_deck.png)
 
@@ -23,7 +23,7 @@ Note that while this is a useful indication of problems, it guarantees nothing f
 
 ## Autocomplete code snippets
 
-Lines may be commented out with the usual `ctrl+/` shortcut, appending a `c` to the start of the selected line(s). The typical bracket matching and quotation autocomplete also included.
+Lines may be commented out with the usual `ctrl+/` shortcut, adding a `c` to the start of the selected line(s). The typical bracket matching and quotation autocomplete also included.
 
 Code snippets have been defined for a selection of appropriate input cards. Simply start typing and hit `enter` to generate the card with default values. Tab-stops are defined for all snippets, so pressing `tab` will then cycle through keywords on the card for editing.
 
@@ -74,24 +74,7 @@ For example, to change the highlight colours for cell material density and comme
 }
 ```
 
-All values for the `"scope"` are described in the table below.
-
-### Scope descriptions
-
-Themes set their own colours for tokens and colour based on a hierarchy. For example, below are the typical naming conventions for line comments.
-
-```text
-comment => comments
- |___ line => line comments
-      |____ double-slash => // style line comment
-      |____ double-dash  => -- style line comment
-      |____ number-sign  => #  style line comment
-      |____ percentage   => %  style line comment
-```
-
-So setting a colour for `comment.line.number-sign` overwites just the `#` style comment colour. Similarly setting `comment.line` overwrites any line comment regardless of style
-
-The MCNP syntax scopes to change are tabulated below.
+Values for the MCNP syntax `"scope"` are described in the table below.
 
 | Syntax description  | Example | Scope |
 | :----------------   | :--------- | :------ |
@@ -112,7 +95,7 @@ The MCNP syntax scopes to change are tabulated below.
 
 It is guaranteed that there are missing cards or rules that are not working as intended, so if you find anything please [raise an issue](https://github.com/repositony/vscode_mcnp/issues).
 
-Suggestions for improvements and features are also welcomed!
+Suggestions for improvements and features are also welcome.
 
 ## For developers
 
@@ -128,3 +111,5 @@ The YAML file format is much easier to deal with, so it is suggested that you ju
     $ npx js-yaml syntaxes/mcnp.tmLanguage.yaml > syntaxes/mcnp.tmLanguage.json
     $ npx js-yaml snippets/mcnp.tmSnippets.yaml > snippets/mcnp.tmSnippets.json
 ```
+
+The included `.vscode/launch.json` allows for easy development. Hit `F5` to bring up a debug instance with the extension loaded, and `ctrl+R` to reload the window whenever a change is made.
