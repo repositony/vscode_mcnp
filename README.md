@@ -53,26 +53,65 @@ Of course, card snippets are fairly subjective in their usefulness. Any feedback
 
 The textmate [naming conventions](https://macromates.com/manual/en/language_grammars) are used for tokenisation to support most themes. MCNP specific syntax highlighting colours are customisable by overwriting the theme in your `settings.json`.
 
-For example, to change the highlight colours for cell material density and comments:
-
+<details>
+  <summary> Expand example settings.json template </summary>
+  
 ```json
 "editor.tokenColorCustomizations": {
-    "textMateRules": [
-        {
-            "scope": "constant.numeric.celldensity.mcnp",
-            "settings": {
-                "foreground": "#535353"
-            }
-        },
+"textMateRules": [
         {
             "scope": "comment.line.mcnp",
-            "settings": {
-                "foreground": "#FF0000"
-            }
+            "settings": { "foreground": "#676767" }
+        },
+        {
+            "scope": "keyword.cellnumber.mcnp",
+            "settings": { "foreground": "#82AAFF" }
+        },
+        {
+            "scope": "constant.numeric.cellmaterial.mcnp",
+            "settings": { "foreground": "#E74856" }
+        },
+        {
+            "scope": "constant.numeric.celldensity.mcnp",
+            "settings": { "foreground": "#2AB5CA" }
+        },
+        {
+            "scope": "keyword.surfacenumber.mcnp",
+            "settings": { "foreground": "#82AAFF" }
+        },
+        {
+            "scope": "constant.language.surfacetype.mcnp",
+            "settings": { "foreground": "#4ecc86" }
+        },
+        {
+            "scope": "constant.language.zaidlib.mcnp",
+            "settings": { "foreground": "#e88e96" }
+        },
+        {
+            "scope": "keyword.mcnp",
+            "settings": { "foreground": "#82AAFF" }
+        },
+        {
+            "scope": "constant.numeric.mcnp",
+            "settings": { "foreground": "#B987E1" }
+        },
+        {
+            "scope": "variable.mcnp",
+            "settings": { "foreground": "#a3d3fb" }
+        },
+        {
+            "scope": "constant.language.mcnp",
+            "settings": { "foreground": "#4ecc86" }
+        },
+        {
+            "scope": "string.mcnp",
+            "settings": { "foreground": "#bb9efa" }  
         }
     ]
 }
 ```
+
+</details>
 
 Values for the MCNP syntax `"scope"` are described in the table below.
 
