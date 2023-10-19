@@ -77,7 +77,7 @@ The textmate [naming conventions](https://macromates.com/manual/en/language_gram
         },
         {
             "scope": "keyword.surfacenumber.mcnp",
-            "settings": { "foreground": "#82AAFF" }
+            "settings": { "foreground": "#ea82ff" }
         },
         {
             "scope": "constant.language.surfacetype.mcnp",
