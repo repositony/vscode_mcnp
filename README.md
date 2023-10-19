@@ -105,7 +105,7 @@ The textmate [naming conventions](https://macromates.com/manual/en/language_gram
         },
         {
             "scope": "string.mcnp",
-            "settings": { "foreground": "#bb9efa" }  
+            "settings": { "foreground": "#ea6cc7" }  
         }
     ]
 }
