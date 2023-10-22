@@ -12,8 +12,8 @@ All the expected syntax rules are implemented for cards, keywords, constants, an
 
 Highlighting rules are contextualised and will generally not apply to incorrect syntax or invalid states. In the following example:
 
-- There are only eight valid tally types, so `FC9` is invalid and will not be highlighted
-- The `XYZ` geometry constant only valid for `GEOM=`, and fails to highlight on `OUT=`
+- Only tallies ending 1-8 are valid, so `FC9` is will not be highlighted
+- The `XYZ` geometry constant is only valid for `GEOM=`, and fails to highlight on `OUT=`
   
 ![fmesh_examples](/images/example_fmesh.png)
 
@@ -25,23 +25,19 @@ Note that while this is a useful indication of problems, it guarantees nothing f
 
 Lines may be commented out with the usual `ctrl+/` shortcut, adding a `c` to the start of the selected line(s). The typical bracket matching and quotation autocomplete also included.
 
-Code snippets have been defined for a selection of appropriate input cards. Simply start typing and hit `enter` to generate the card with default values. Tab-stops are defined for all snippets, so pressing `tab` will then cycle through keywords on the card for editing.
+Code snippets are defined for input cards where appropriate. Simply start typing and hit `enter` to generate the card with default values. Tab-stops are defined for all snippets, so pressing `tab` will then cycle through keywords on the card for editing.
 
 For example, selecting `ACT` from the suggestions,
 
 ![act_card_prompt](/images/act_card_prompt.png)
 
-will generate the following for you
+will generate the following:
 
 ![act_card_example](/images/act_card_example.png)
 
-Defaults are used where known, but only a hint is provided where the default is ambiguous. e.g. `DNEB` and `ENEB` in the `ACT` example.
-
-### A note on snippets
-
 **For productivity, keywords and values are set to default or a simple hint where ambiguous.**
 
-A comprehensive guide for most cards would take up the entire screen. As a compromise, every line simply has a small comment for context. This is still very useful for cards such as `PHYS`, which have sets of values that change with particle type and no keywords for guidance.
+A comprehensive guide for most cards would take up the entire screen. As a compromise, every line simply has a small comment for context. This is still very useful for cards such as `PHYS`, which are just sets of values.
 
 ![Alt text](/images/physn_completed.png)
 
@@ -113,6 +109,9 @@ The textmate [naming conventions](https://macromates.com/manual/en/language_gram
 
 </details>
 
+<details>
+  <summary> Expand table of scopes </summary>
+
 Values for the MCNP syntax `"scope"` are described in the table below.
 
 | Syntax description  | Example | Scope |
@@ -130,13 +129,16 @@ Values for the MCNP syntax `"scope"` are described in the table below.
 | General constants   | fmesh34:n geom=**rzt** | constant.language.mcnp        |
 | Strings             | fc34 **example tally comment** | string.mcnp       |
 
+</details>
+
 ## Issues and bugs
 
 It is guaranteed that there are missing cards or rules that are not working as intended, so if you find anything please [raise an issue](https://github.com/repositony/vscode_mcnp/issues).
 
 Suggestions for improvements and features are also welcome.
 
-## For developers
+<details>
+  <summary> Notes for developers </summary>
 
 The JSON files quickly spiral out of control with all the nuances of the various input cards and their edge cases.
 
@@ -152,3 +154,5 @@ The YAML file format is much easier to deal with, so it is suggested that you ju
 ```
 
 The included `.vscode/launch.json` allows for easy development. Hit `F5` to bring up a debug instance with the extension loaded, and `ctrl+R` to reload the window whenever a change is made.
+
+</details>
