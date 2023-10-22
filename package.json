@@ -1,7 +1,7 @@
 {
     "name": "vscodemcnp",
-    "version": "1.0.1",
-    "displayName": "MCNP6.3 syntax highlighting and snippets",
+    "version": "1.0.2",
+    "displayName": "MCNP6 syntax highlighting and snippets",
     "publisher": "repositony",
     "author": {
         "name": "Tony Turner"
@@ -9,7 +9,7 @@
     "description": "Syntax highlighting and autocomplete code snippets for MCNP input files",
     "icon": "/images/icon.png",
     "galleryBanner": {
-        "color": "#F6F8FA",
+        "color": "#161935",
         "theme": "dark"
     },
     "pricing": "Free",
