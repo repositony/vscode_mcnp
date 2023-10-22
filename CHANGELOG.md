@@ -4,6 +4,12 @@ All notable changes to the extension will be documented in this file.
 
 For full commit history and versions please see the [repository](https://github.com/repositony/vscode_mcnp).
 
+## Version 1.0.2
+
+- Added full template for settings.json colour customisation
+- Added sensible logo to replace the placeholder
+- Readability updates to the README
+
 ## Version 1.0.1
 
 - Simplified colour customisation section of readme
