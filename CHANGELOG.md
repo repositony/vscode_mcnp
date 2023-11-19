@@ -4,10 +4,14 @@ All notable changes to the extension will be documented in this file.
 
 For full commit history and versions please see the [repository](https://github.com/repositony/vscode_mcnp).
 
+## Version 1.0.4
+
+- Fixed missing UKAEA-CuV syntax highlighting
+- Capitalised macrobody code snippet keywords
+
 ## Version 1.0.3
 
 - Added macrobody code snippets
-- Fixed missing UKAEA-CuV syntax highlighting
 - Fixed numbered geometry cardname captures
 
 ## Version 1.0.2

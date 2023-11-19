@@ -830,7 +830,7 @@ Box macrobody:
   prefix:
     - BOX
   body:
-    - "box          $ Macrobody: Arbitrarily Oriented Orthogonal Box"
+    - "BOX          $ Macrobody: Arbitrarily Oriented Orthogonal Box"
     - "        ${1:x} ${2:y} ${3:z}        $ (x,y,z) coordinates of a corner of the box"
     - "        ${4:a1x} ${5:a1y} ${6:a1z}  $ Vector of first side from the specified corner"
     - "        ${7:a2x} ${8:a2y} ${9:a2z}  $ Vector of second side from the specified corner"
@@ -842,7 +842,7 @@ RPP macrobody:
   prefix:
     - RPP
   body:
-    - "rpp       $ Macrobody: Rectangular Parallelepiped"
+    - "RPP       $ Macrobody: Rectangular Parallelepiped"
     - "        ${1:xmin} ${2:xmax} $ Termini of box sides normal to the x axis"
     - "        ${3:ymin} ${4:ymax} $ Termini of box sides normal to the y axis"
     - "        ${5:zmin} ${6:zmax} $ Termini of box sides normal to the z axis"
@@ -853,7 +853,7 @@ SPH macrobody:
   prefix:
     - SPH
   body:
-    - "sph   $ Macrobody: Sphere"
+    - "SPH   $ Macrobody: Sphere"
     - "        ${1:x} ${2:y} ${3:z} $ (x,y,z) coordinates of the center of the sphere"
     - "        ${4:r}     $ Radius of sphere"
   description: SPH macrobody
@@ -863,7 +863,7 @@ RCC macrobody:
   prefix:
     - RCC
   body:
-    - "rcc       $ Macrobody: Right Circular Cylinder"
+    - "RCC       $ Macrobody: Right Circular Cylinder"
     - "        ${1:x} ${2:y} ${3:z}     $ (x,y,z) coordinates of the center of the cylinder base"
     - "        ${4:h1} ${5:h2} ${6:h3}  $ Axis vector for orientation and cylinder height"
     - "        ${7:r}         $ Radius of cylinder"
@@ -874,7 +874,7 @@ HEX macrobody:
   prefix:
     - HEX
   body:
-    - "hex       $ Macrobody: Right Hexagonal Prism"
+    - "HEX       $ Macrobody: Right Hexagonal Prism"
     - "        ${1:x} ${2:y} ${3:z}     $ (x,y,z) coordinates at the bottom center of the hexagonal prism"
     - "        ${4:h1} ${5:h2} ${6:h3}  $ Vector from the bottom to top of hexagonal prism"
     - "        ${7:r1} ${8:r2} ${9:r3}  $ Vector from the axis to the center of the first facet"
@@ -887,7 +887,7 @@ RHP macrobody:
   prefix:
     - RHP
   body:
-    - "rhp       $ Macrobody: Right Hexagonal Prism"
+    - "RHP       $ Macrobody: Right Hexagonal Prism"
     - "        ${1:x} ${2:y} ${3:z}     $ (x,y,z) coordinates at the bottom center of the hexagonal prism"
     - "        ${4:h1} ${5:h2} ${6:h3}  $ Vector from the bottom to top of hexagonal prism"
     - "        ${7:r1} ${8:r2} ${9:r3}  $ Vector from the axis to the center of the first facet"
@@ -900,7 +900,7 @@ REC macrobody:
   prefix:
     - REC
   body:
-    - "rec          $ Macrobody: Right Elliptical Cylinder"
+    - "REC          $ Macrobody: Right Elliptical Cylinder"
     - "        ${1:x} ${2:y} ${3:z}        $ (x,y,z) coordinates of the cylinder bottom"
     - "        ${4:h1} ${5:h2} ${6:h3}     $ Cylinder axis height vector"
     - "        ${7:v1x} ${8:v1y} ${9:v1z}  $ Ellipse minor axis vector, normal to (h1,h2,h3)"
@@ -912,7 +912,7 @@ TRC macrobody:
   prefix:
     - TRC
   body:
-    - "trc       $ Macrobody: Truncated Right-angle Cone"
+    - "TRC       $ Macrobody: Truncated Right-angle Cone"
     - "        ${1:x} ${2:y} ${3:z}     $ (x,y,z) coordinates of the cone bottom"
     - "        ${4:h1} ${5:h2} ${6:h3}  $ Cone axis height vector"
     - "        ${7:r1}        $ Radius of lower cone base"
@@ -924,7 +924,7 @@ ELL macrobody:
   prefix:
     - ELL
   body:
-    - "ell          $ Macrobody: Ellipsoid"
+    - "ELL          $ Macrobody: Ellipsoid"
     - "        ${1:v1x} ${2:v1y} ${3:v1z}  $ Coordinates of first focus (r>0) or ellipsoid center (r<0)"
     - "        ${4:v2x} ${5:v2y} ${6:v2z}  $ Coordinates of second focus (r>0) or major axis vector (r<0)"
     - "        ${7:r}            $ major (r>0) or minor (r<0) radius length"
@@ -935,7 +935,7 @@ WED macrobody:
   prefix:
     - WED
   body:
-    - "wed          $ Macrobody: Wedge"
+    - "WED          $ Macrobody: Wedge"
     - "        ${1:x} ${2:y} ${3:z}        $ (x,y,z) coordinates of wedge vertex"
     - "        ${4:v1x} ${5:v1y} ${6:v1z}  $ Vector of first side of triangular base"
     - "        ${7:v2x} ${8:v2y} ${9:v2z}  $ Vector of second side of triangular base"
@@ -949,7 +949,7 @@ ARB macrobody:
   prefix:
     - ARB
   body:
-    - "arb       $ Macrobody: Arbitrary Polyhedron"
+    - "ARB       $ Macrobody: Arbitrary Polyhedron"
     - "        x1 y2 z3  $ (x,y,z) coordinates of first corner of the polyhedron"
     - "        x1 y2 z3  $ (x,y,z) coordinates of second corner of the polyhedron"
     - "        x1 y2 z3  $ (x,y,z) coordinates of third corner of the polyhedron"
