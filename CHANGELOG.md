@@ -4,6 +4,11 @@ All notable changes to the extension will be documented in this file.
 
 For full commit history and versions please see the [repository](https://github.com/repositony/vscode_mcnp).
 
+## Version 1.0.3
+
+- Added macrobody code snippets
+- Fixed numbered geometry cardname captures
+
 ## Version 1.0.2
 
 - Added full template for settings.json colour customisation
