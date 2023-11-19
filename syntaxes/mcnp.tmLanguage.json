@@ -230,7 +230,7 @@
     },
     "geometry_cardname_numbered": {
       "match": "(?i)^\\s{0,4}(embeb|embem|embtb|embtm|embde|embdf)(\\d+)\\s",
-      "beginCaptures": {
+      "captures": {
         "1": {
           "name": "keyword.mcnp"
         },
