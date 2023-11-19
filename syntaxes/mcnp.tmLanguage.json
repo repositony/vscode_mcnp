@@ -1641,6 +1641,9 @@
           "include": "#fmesh_type"
         },
         {
+          "include": "#fmesh_cuv"
+        },
+        {
           "include": "#fmesh_tally"
         }
       ]

@@ -1060,6 +1060,7 @@ repository:
       - include: "#fmesh_geometry"
       - include: "#fmesh_output"
       - include: "#fmesh_type"
+      - include: "#fmesh_cuv"
       - include: "#fmesh_tally"
 
   fmesh_variables:

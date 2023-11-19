@@ -7,6 +7,7 @@ For full commit history and versions please see the [repository](https://github.
 ## Version 1.0.3
 
 - Added macrobody code snippets
+- Fixed missing UKAEA-CuV syntax highlighting
 - Fixed numbered geometry cardname captures
 
 ## Version 1.0.2
