@@ -793,7 +793,7 @@ repository:
   Fn_plus:
     # the f6 and f8 tallies can also be preceeded by a '+'
     # kept separate from general case to hint at a problem
-    begin: (?i)^\s{0,4}([\+\*]*f)(\d*[68])(\:)
+    begin: (?i)^\s{0,4}([\+\*]*f)(\d*[68])[\s:]
     end: ^\n|(?i)(?=^\s{0,4}(?![cC]\s)[\*\+]*\w+)
     beginCaptures:
       "1":
