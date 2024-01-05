@@ -52,7 +52,7 @@ Of course, card snippets are fairly subjective in their usefulness. Any feedback
 The textmate [naming conventions](https://macromates.com/manual/en/language_grammars) are used for tokenisation to support most themes. MCNP specific syntax highlighting colours are customisable by overwriting the theme in your `settings.json`.
 
 <details>
-  <summary> Expand example settings.json template </summary>
+  <summary> Click to show example settings.json template </summary>
   
 ```json
 "editor.tokenColorCustomizations": {
@@ -112,7 +112,7 @@ The textmate [naming conventions](https://macromates.com/manual/en/language_gram
 </details>
 
 <details>
-  <summary> Expand table of scopes </summary>
+  <summary> Click to show table of scopes </summary>
 
 Values for the MCNP syntax `"scope"` are described in the table below.
 
