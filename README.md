@@ -2,7 +2,7 @@
 
 **An extension providing syntax highlighting and code snippets for MCNP input decks**
 
-Cards, keywords, and constants were taken from the [MCNPv6.3.0 user manual](https://mcnp.lanl.gov/manual.html) but is compatible with most version 6.x input files. By default this applies to files with the `.i` or `.ip` file extension. The source is available on [github](https://github.com/repositony/vscode_mcnp).
+Cards, keywords, and constants were taken from the [MCNPv6.3.0 user manual](https://mcnp.lanl.gov/manual.html) but is compatible with most version 6.x input files. By default this applies to files with the `.i`, `.ip`, or `.mcnp` file extension. The source is available on [github](https://github.com/repositony/vscode_mcnp).
 
 *Note: The default theme colours are not fantastic, but are easily customised with the template [here](#customising-syntax-colours)*
   

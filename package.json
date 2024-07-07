@@ -1,6 +1,6 @@
 {
     "name": "vscodemcnp",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "displayName": "MCNP6 syntax highlighting and snippets",
     "publisher": "repositony",
     "author": {
@@ -42,7 +42,8 @@
                 ],
                 "extensions": [
                     ".i",
-                    ".ip"
+                    ".ip",
+                    ".mcnp"
                 ],
                 "configuration": "./language-configuration.json"
             }
